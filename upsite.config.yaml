@@ -1,0 +1,61 @@
+# ---------------------------------------------------------------------------
+# Upsite — the entire platform is configured from this one file.
+# There is no database and no admin UI: add a monitor here, restart (or POST
+# to /api/reload), and it starts being checked.
+#
+# Values may reference environment variables as ${VAR}, so tokens and internal
+# hostnames never have to be committed.
+# ---------------------------------------------------------------------------
+
+site:
+  name: Upsite
+  tagline: Real-time uptime intelligence
+
+# Applied to every monitor unless the monitor overrides them.
+defaults:
+  intervalSeconds: 60 # how often to check
+  timeoutMs: 10000 # give up after this long
+  # Slower than this and a passing check reports "degraded". Tuned to these
+  # sites' observed 300–1500ms range so normal variance doesn't flap.
+  degradedMs: 2500
+  failureThreshold: 2 # consecutive failures before declaring an outage
+  retries: 1 # immediate retries before a check counts as failed
+
+retention:
+  recentChecks: 2880 # raw checks kept per monitor (48h at 60s)
+  days: 90 # daily rollups kept per monitor
+  incidents: 200 # incidents kept in the log
+
+notifications:
+  webhooks: []
+  # slackWebhook: ${SLACK_WEBHOOK_URL}   # also works with Discord
+
+monitors:
+  - id: kichaka
+    name: Kichaka
+    url: https://kichaka.top
+    tags: [production, web]
+
+  - id: kfs
+    name: KFS
+    url: https://hr.kenyaforestservice.org
+    tags: [production, web]
+    description: Kenya Forest Service HR portal.
+
+  - id: kimap
+    name: KIMAP
+    url: https://kimap.org
+    tags: [production, web]
+
+  - id: protouch
+    name: Protouch
+    url: https://protouch.co.ke
+    tags: [production, web]
+
+  # Hidden behind the password gate. Still checked on schedule — only viewing
+  # it is gated. Requires UPSITE_SECURE_PASSWORD to be set.
+  - id: simba
+    name: Simba
+    url: https://bitok.campaignhq.top
+    secure: true
+    tags: [private]

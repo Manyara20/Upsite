@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Upsite design tokens
+   A deep-space console: near-black ground, one cyan signal accent,
+   and status hues that stay legible against glass.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-void: #05070d;
+  --color-abyss: #080b14;
+  --color-panel: #0c111d;
+  --color-edge: #1a2234;
+  --color-edge-bright: #2a3550;
+
+  --color-ink: #e8eefc;
+  --color-ink-dim: #8b9ab8;
+  --color-ink-faint: #56637d;
+
+  --color-signal: #22d3ee;
+  --color-signal-deep: #0891b2;
+
+  --color-up: #34d399;
+  --color-degraded: #fbbf24;
+  --color-down: #fb7185;
+  --color-paused: #64748b;
+
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  --animate-sweep: sweep 3s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-drift: drift 24s linear infinite;
+  --animate-rise: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.9); }
+}
+
+@keyframes drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 56px 56px; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+* {
+  border-color: var(--color-edge);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1, "cv02" 1;
+}
+
+/* The grid that makes the ground feel like a console rather than a page. */
+.grid-field {
+  background-image:
+    linear-gradient(to right, rgba(42, 53, 80, 0.28) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 53, 80, 0.28) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Radial falloff so the grid fades out toward the edges of the viewport. */
+.grid-mask {
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 35%, transparent 100%);
+}
+
+.glass {
+  background: linear-gradient(
+    160deg,
+    rgba(18, 25, 41, 0.82) 0%,
+    rgba(10, 14, 24, 0.72) 100%
+  );
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* A hairline of light along the top edge — reads as a bevel, not a border. */
+.bevel {
+  position: relative;
+}
+.bevel::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(34, 211, 238, 0.4),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.text-glow-up { text-shadow: 0 0 18px rgba(52, 211, 153, 0.55); }
+.text-glow-down { text-shadow: 0 0 18px rgba(251, 113, 133, 0.55); }
+.text-glow-degraded { text-shadow: 0 0 18px rgba(251, 191, 36, 0.55); }
+.text-glow-signal { text-shadow: 0 0 20px rgba(34, 211, 238, 0.5); }
+
+/* Thin, unobtrusive scrollbars — a dashboard shouldn't be interrupted by chrome. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-edge-bright);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: #3b4870; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

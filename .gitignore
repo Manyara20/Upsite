@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+build
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+
+# Upsite's flat-file datastore — this IS the database. Never commit it.
+.data
