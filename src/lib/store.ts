@@ -145,22 +145,47 @@ class Store {
   private config: UpsiteConfig = getConfig();
   private flushTimer: NodeJS.Timeout | null = null;
   private ready = false;
+  /**
+   * False when the datastore directory cannot be written — a read-only or
+   * ephemeral filesystem, as on most serverless platforms. Upsite then runs
+   * entirely in memory: checks still work, history simply does not survive.
+   */
+  private persistent = true;
+
+  get isPersistent(): boolean {
+    return this.persistent;
+  }
 
   /** Loads everything from disk and reconciles it against the current config. */
   async init(config: UpsiteConfig): Promise<void> {
     if (this.ready) return;
     this.config = config;
-    await ensureDirs();
 
-    const savedStates = await readJson<Record<string, MonitorState>>(STATE_FILE, {});
-    this.incidents = await readJson<Incident[]>(INCIDENT_FILE, []);
+    try {
+      await ensureDirs();
+    } catch (err) {
+      // Degrade to memory-only rather than taking the whole app down: a
+      // dashboard with no history is far better than a 500.
+      this.persistent = false;
+      console.warn(
+        `[upsite] ${DATA_DIR} is not writable (${(err as NodeJS.ErrnoException).code}) — ` +
+          "running in memory-only mode, history will not persist",
+      );
+    }
+
+    const savedStates = this.persistent
+      ? await readJson<Record<string, MonitorState>>(STATE_FILE, {})
+      : {};
+    this.incidents = this.persistent ? await readJson<Incident[]>(INCIDENT_FILE, []) : [];
 
     await Promise.all(
       config.monitors.map(async (m) => {
-        const [recent, daily] = await Promise.all([
-          readJsonl<CheckResult>(this.jsonlPath(m.id)),
-          readJson<DayBucket[]>(this.dailyPath(m.id), []),
-        ]);
+        const [recent, daily] = this.persistent
+          ? await Promise.all([
+              readJsonl<CheckResult>(this.jsonlPath(m.id)),
+              readJson<DayBucket[]>(this.dailyPath(m.id), []),
+            ])
+          : [[] as CheckResult[], [] as DayBucket[]];
 
         const trimmed = recent.slice(-config.retention.recentChecks);
         const state = savedStates[m.id] ?? newState();
@@ -316,6 +341,7 @@ class Store {
     result: CheckResult,
     rt: MonitorRuntime,
   ): Promise<void> {
+    if (!this.persistent) return;
     try {
       await fs.appendFile(this.jsonlPath(id), `${JSON.stringify(result)}\n`, "utf8");
       rt.appended++;
@@ -334,7 +360,7 @@ class Store {
 
   /** Batches state/rollup/incident writes — they change on every single check. */
   private scheduleFlush(): void {
-    if (this.flushTimer) return;
+    if (!this.persistent || this.flushTimer) return;
     this.flushTimer = setTimeout(() => {
       this.flushTimer = null;
       void this.flush();
@@ -343,6 +369,7 @@ class Store {
   }
 
   async flush(): Promise<void> {
+    if (!this.persistent) return;
     try {
       const states: Record<string, MonitorState> = {};
       const writes: Promise<void>[] = [];

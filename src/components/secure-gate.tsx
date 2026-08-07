@@ -26,13 +26,27 @@ export function SecureGate({
         <Lock className="mx-auto h-6 w-6 text-ink-faint" />
         <h2 className="mt-4 text-base font-medium text-ink">Secure tab not configured</h2>
         <p className="mt-2 text-sm text-ink-dim">
-          Set a password and restart the server to enable it:
+          Set a password either way and restart the server:
         </p>
-        <pre className="mt-4 overflow-x-auto rounded-lg border border-edge bg-void/60 p-3 text-left font-mono text-[11px] text-ink-dim">
-          {`# .env.local
-UPSITE_SECURE_PASSWORD=your-password
-UPSITE_SECRET=$(openssl rand -hex 32)`}
+
+        <p className="mt-4 text-left text-[11px] uppercase tracking-wider text-ink-faint">
+          In the environment
+        </p>
+        <pre className="mt-1.5 overflow-x-auto rounded-lg border border-edge bg-void/60 p-3 text-left font-mono text-[11px] text-ink-dim">
+          {`UPSITE_SECURE_PASSWORD=your-password`}
         </pre>
+
+        <p className="mt-4 text-left text-[11px] uppercase tracking-wider text-ink-faint">
+          Or in upsite.config.yaml
+        </p>
+        <pre className="mt-1.5 overflow-x-auto rounded-lg border border-edge bg-void/60 p-3 text-left font-mono text-[11px] text-ink-dim">
+          {`auth:
+  passwordHash: <printf '%s' 'pw' | sha256sum>`}
+        </pre>
+        <p className="mt-2 text-left text-[11px] text-ink-faint">
+          The config option survives deploys that don&apos;t carry your env file, but
+          anyone who can read the repo can attack the hash offline.
+        </p>
         <p className="mt-3 text-[11px] text-ink-faint">
           Secure monitors keep being checked either way — only viewing them is gated.
         </p>

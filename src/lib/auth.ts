@@ -1,5 +1,6 @@
 import { createHmac, randomBytes, timingSafeEqual, createHash } from "node:crypto";
 import { cookies } from "next/headers";
+import { getConfig } from "./config";
 
 /**
  * The password gate for secure monitors.
@@ -23,27 +24,70 @@ const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
  */
 const EPHEMERAL_SECRET = randomBytes(32).toString("hex");
 
+function sha256(value: string): Buffer {
+  return createHash("sha256").update(value).digest();
+}
+
+/**
+ * The configured password, as a sha256 digest, from the first source that has
+ * one. The environment always wins, so a deployment can override whatever is
+ * committed to the config file.
+ */
+function expectedDigest(): Buffer | null {
+  const fromEnv = process.env.UPSITE_SECURE_PASSWORD;
+  if (fromEnv) return sha256(fromEnv);
+
+  let auth;
+  try {
+    auth = getConfig().auth;
+  } catch {
+    // A malformed config must not take the gate down with it.
+    return null;
+  }
+
+  if (auth.passwordHash) return Buffer.from(auth.passwordHash.toLowerCase(), "hex");
+
+  // An unexpanded `${VAR}` means the variable was never set — treat that as
+  // "no password", not as a literal password of that text.
+  if (auth.password && !/^\$\{[A-Z0-9_]+\}$/i.test(auth.password)) {
+    return sha256(auth.password);
+  }
+
+  return null;
+}
+
+/**
+ * Key for signing session cookies. Falls back to deriving one from the
+ * password so that sessions survive restarts even when `UPSITE_SECRET` is
+ * unset — without it, every cold start on a serverless host would log
+ * everyone out. Changing the password invalidates outstanding sessions, which
+ * is the behaviour you want anyway.
+ */
 function secret(): string {
-  return process.env.UPSITE_SECRET ?? EPHEMERAL_SECRET;
+  if (process.env.UPSITE_SECRET) return process.env.UPSITE_SECRET;
+
+  const digest = expectedDigest();
+  if (digest) return createHash("sha256").update("upsite:session:").update(digest).digest("hex");
+
+  return EPHEMERAL_SECRET;
 }
 
 /** Whether a password has been configured at all. */
 export function isSecureConfigured(): boolean {
-  return Boolean(process.env.UPSITE_SECURE_PASSWORD);
+  return expectedDigest() !== null;
 }
 
 /**
- * Constant-time password comparison. Both sides are hashed first so the
+ * Constant-time password comparison. Both sides are compared as digests so the
  * comparison length never varies with the input, which would otherwise leak
  * the password length through timing.
  */
 export function checkPassword(input: string): boolean {
-  const expected = process.env.UPSITE_SECURE_PASSWORD;
+  const expected = expectedDigest();
   if (!expected) return false;
 
-  const a = createHash("sha256").update(input).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
+  const actual = sha256(input);
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 
 function sign(payload: string): string {

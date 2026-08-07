@@ -133,6 +133,22 @@ const configSchema = z.object({
       incidents: z.number().int().min(1).default(200),
     })
     .default({}),
+  /**
+   * Password for the secure tab, for deployments where setting an environment
+   * variable is inconvenient (Vercel, Netlify). `UPSITE_SECURE_PASSWORD`
+   * always wins when it is set.
+   */
+  auth: z
+    .object({
+      /** sha256 hex of the password — keeps the plaintext out of the repo. */
+      passwordHash: z
+        .string()
+        .regex(/^[a-f0-9]{64}$/i, "passwordHash must be 64 hex characters (sha256)")
+        .optional(),
+      /** Plaintext alternative. Readable by anyone who can read the repo. */
+      password: z.string().min(1).optional(),
+    })
+    .default({}),
   notifications: z
     .object({
       /** POSTed a JSON payload on every status transition. */

@@ -26,6 +26,18 @@ retention:
   days: 90 # daily rollups kept per monitor
   incidents: 200 # incidents kept in the log
 
+# Password for the secure tab. Committed here so deployments that can't easily
+# set environment variables (Vercel, Netlify) still work out of the box.
+#
+# This is a sha256 of the password, so the plaintext isn't in the repo — but a
+# short password is guessable from its hash, so treat this as obfuscation, not
+# real protection. Set UPSITE_SECURE_PASSWORD in the environment to override it;
+# the environment always wins.
+#
+#   Generate:  printf '%s' 'your-password' | sha256sum
+auth:
+  passwordHash: 8ba8ec0e84a2744d1eaa992b5650dbc3f50cbf82f777c966fc7da8f8928bf36a
+
 notifications:
   webhooks: []
   # slackWebhook: ${SLACK_WEBHOOK_URL}   # also works with Discord
@@ -50,6 +62,11 @@ monitors:
   - id: protouch
     name: Protouch
     url: https://protouch.co.ke
+    tags: [production, web]
+
+  - id: kfc
+    name: KFC
+    url: https://kfc.ac.ke
     tags: [production, web]
 
   # Hidden behind the password gate. Still checked on schedule — only viewing

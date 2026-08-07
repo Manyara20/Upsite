@@ -175,11 +175,30 @@ checked on schedule** — only viewing them is gated.
   secure: true
 ```
 
+Set the password in **either** place. The environment always wins:
+
 ```bash
-# .env.local
+# .env.local — best for a host you control
 UPSITE_SECURE_PASSWORD=your-password
 UPSITE_SECRET=$(openssl rand -hex 32)
 ```
+
+```yaml
+# upsite.config.yaml — survives deploys that don't carry your env file
+auth:
+  passwordHash: <printf '%s' 'your-password' | sha256sum>
+```
+
+The config option exists because `.env.local` is gitignored and therefore never
+reaches Vercel or Netlify. Storing the sha256 keeps the plaintext out of the
+repo, but **a short password is recoverable from its hash offline** — treat it
+as obfuscation, not protection. Use the environment variable for anything that
+actually matters.
+
+When `UPSITE_SECRET` is unset, the cookie-signing key is derived from the
+password, so sessions survive restarts and serverless cold starts. Set an
+explicit `UPSITE_SECRET` in production anyway; changing the password
+invalidates every outstanding session either way.
 
 Until unlocked, a secure monitor is **omitted, not masked** — it is absent from
 `/api/status`, the SSE stream, the incident log, the status counts, its detail
@@ -229,18 +248,68 @@ never delay or fail the check that triggered it.
 
 ## Deploying
 
-Upsite needs a **single long-lived Node process with a writable disk** — the
-scheduler and the datastore both live in it. A VPS, a container, or any
-always-on Node host works.
+Upsite wants **one long-lived Node process with a writable disk** — the
+scheduler and the datastore both live in it. A VPS, a container, Railway,
+Render, Fly.io, or any always-on Node host gives you the full product:
+background checks on their own schedule, and history that survives restarts.
 
-It is *not* suited to scale-to-zero or multi-instance serverless: a process that
-sleeps stops checking, and N instances would each check independently and write
-over each other's state. If you need serverless, run one instance and drive it
-from an external cron hitting `POST /api/check`, with `UPSITE_DATA_DIR` on a
-persistent volume.
+### Serverless (Vercel, Lambda, Netlify)
 
-Mount `.data/` as a volume to keep history across deploys. It is gitignored by
-design — it is the database.
+It runs, but in a reduced mode, and you should know exactly what you give up.
+
+Two platform facts drive this:
+
+1. **The filesystem is read-only.** Upsite detects this and switches to
+   memory-only mode — checks still run, history just doesn't persist.
+2. **The process is frozen between requests**, so a `setTimeout` scheduled
+   during one request never fires. The internal scheduler is therefore
+   disabled, and checks are driven by requests and cron instead.
+
+| | Long-lived host | Serverless |
+|---|---|---|
+| Checks on a schedule | ✅ every `intervalSeconds` | ⚠️ on request + cron only |
+| Uptime history / 90-day bars | ✅ | ❌ resets constantly |
+| Incident log | ✅ | ⚠️ only within one warm instance |
+| Live SSE dashboard | ✅ | ⚠️ ends when the function freezes |
+| Current status | ✅ | ✅ |
+
+So on Vercel, Upsite is a **live status page** — accurate the moment you load
+it — rather than an uptime *recorder*. Loading the page checks anything past
+its interval and shows real results; nothing is remembered between cold starts,
+and different instances have separate memory.
+
+The secure tab works on Vercel with **no environment variables at all**, via
+`auth.passwordHash` in `upsite.config.yaml` (see [The secure tab](#the-secure-tab)).
+For a stronger setup, override it in Vercel → Settings → Environment Variables —
+`.env.local` is gitignored and never deployed:
+
+```
+UPSITE_SECURE_PASSWORD   your password        # overrides the config hash
+UPSITE_SECRET            openssl rand -hex 32 # explicit cookie-signing key
+UPSITE_COOKIE_SECURE     1                    # Vercel is HTTPS
+```
+
+`vercel.json` registers a cron against `/api/cron`. Note that **Vercel's Hobby
+plan allows only one cron run per day**; Pro allows every minute. Any external
+scheduler works too — point it at `/api/cron` and set `CRON_SECRET` to lock the
+endpoint down:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://your-app/api/cron
+```
+
+To get real history on Vercel you would have to add a storage backend
+(Vercel KV, Upstash, Blob) — which is precisely the database this project was
+built to avoid. A $5 VPS or a Railway/Render container keeps the no-database
+design intact and gives you everything.
+
+### Keeping history
+
+Mount `.data/` as a volume so it survives deploys. It is gitignored by design —
+it is the database.
+
+To force serverless mode on a host that isn't auto-detected, set
+`UPSITE_EPHEMERAL=1`; to force the scheduler on, set `UPSITE_EPHEMERAL=0`.
 
 ---
 

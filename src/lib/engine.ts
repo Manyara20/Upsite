@@ -16,16 +16,37 @@ import { notify } from "./notify";
  */
 const BOOT_SPREAD_MS = 4_000;
 
+/** Upper bound on how long an on-demand refresh may delay a page render. */
+const ON_DEMAND_BUDGET_MS = 8_000;
+
 interface Scheduled {
   timer: NodeJS.Timeout;
   /** Guards against overlap when a check outlives its own interval. */
   running: boolean;
 }
 
+/**
+ * True on platforms where the process is frozen between requests, so a
+ * `setTimeout` scheduled during one request will never fire. Serverless hosts
+ * (Vercel, Lambda, Netlify) all behave this way; there, checks have to be
+ * driven by incoming requests and cron instead of by the internal scheduler.
+ */
+function isEphemeral(): boolean {
+  if (process.env.UPSITE_EPHEMERAL === "1") return true;
+  if (process.env.UPSITE_EPHEMERAL === "0") return false;
+  return Boolean(
+    process.env.VERCEL ??
+      process.env.AWS_LAMBDA_FUNCTION_NAME ??
+      process.env.NETLIFY,
+  );
+}
+
 class Engine {
   private timers = new Map<string, Scheduled>();
   private config: UpsiteConfig | null = null;
   private started = false;
+  /** In-flight on-demand refresh, shared by concurrent requests. */
+  private refreshing: Promise<void> | null = null;
 
   get running(): boolean {
     return this.started;
@@ -33,12 +54,16 @@ class Engine {
 
   async start(): Promise<void> {
     if (this.started) return;
-    this.started = true;
 
     const config = getConfig();
     this.config = config;
     await store.init(config);
     store.setConfig(config);
+
+    // Only claim to be started once init has actually succeeded. Setting this
+    // earlier meant a failed init left the engine permanently "running" with an
+    // empty store, and every later request silently served no data.
+    this.started = true;
 
     const active = config.monitors.filter((m) => !m.paused);
     console.log(
@@ -48,16 +73,75 @@ class Engine {
           : ""),
     );
 
+    for (const m of config.monitors) {
+      if (m.paused) store.setPaused(m.id, true);
+    }
+
+    if (isEphemeral()) {
+      // Timers cannot survive here, so don't pretend to schedule anything.
+      // Requests and cron drive the checks instead, via ensureFresh().
+      console.log(
+        "[upsite] ephemeral runtime detected — internal scheduler disabled; " +
+          "checks run on request and from /api/cron",
+      );
+      return;
+    }
+
     config.monitors.forEach((m, i) => {
-      if (m.paused) {
-        store.setPaused(m.id, true);
-        return;
-      }
+      if (m.paused) return;
       const delay = Math.round((i / Math.max(1, config.monitors.length)) * BOOT_SPREAD_MS);
       this.schedule(m, delay);
     });
 
     this.installShutdownHooks();
+  }
+
+  /**
+   * Brings stale monitors up to date, in parallel and within a time budget.
+   *
+   * On a long-lived host the scheduler has already checked everything, so this
+   * is a no-op. On an ephemeral host it is what actually produces data: each
+   * request refreshes whatever has gone past its interval.
+   */
+  async ensureFresh({
+    includeSecure = true,
+    budgetMs = ON_DEMAND_BUDGET_MS,
+  }: { includeSecure?: boolean; budgetMs?: number } = {}): Promise<number> {
+    // Concurrent requests share one refresh pass rather than each starting
+    // their own storm of checks against the same targets.
+    if (this.refreshing) {
+      await this.refreshing;
+      return 0;
+    }
+
+    const config = this.config ?? getConfig();
+    const now = Date.now();
+
+    const stale = config.monitors.filter((m) => {
+      if (m.paused) return false;
+      if (!includeSecure && m.secure) return false;
+      const last = store.getState(m.id).lastCheck;
+      return !last || now - last >= m.intervalSeconds * 1000;
+    });
+
+    if (stale.length === 0) return 0;
+
+    const pass = Promise.allSettled(stale.map((m) => this.checkNow(m)));
+
+    // Never let a hung target hold the page hostage; unfinished checks keep
+    // running and will land in the store for the next request.
+    this.refreshing = Promise.race([
+      pass,
+      new Promise<void>((resolve) => setTimeout(resolve, budgetMs).unref?.()),
+    ]).then(() => undefined);
+
+    try {
+      await this.refreshing;
+    } finally {
+      this.refreshing = null;
+    }
+
+    return stale.length;
   }
 
   private schedule(monitor: ResolvedMonitor, delayMs: number): void {
@@ -199,5 +283,11 @@ globalForEngine.__upsiteEngine = engine;
  * hit before instrumentation settles — this makes that harmless.
  */
 export async function ensureEngine(): Promise<void> {
-  if (!engine.running) await engine.start();
+  if (engine.running) return;
+  try {
+    await engine.start();
+  } catch (err) {
+    // A dashboard that renders "awaiting first check" beats a 500 page.
+    console.error("[upsite] engine failed to start:", err);
+  }
 }
