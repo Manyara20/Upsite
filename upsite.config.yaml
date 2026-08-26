@@ -26,6 +26,8 @@ repository:
   name: Upsite
   branch: main
 
+#loaded
+
 # Applied to every monitor unless the monitor overrides them.
 defaults:
   # Informational: the real cadence is the cron in .github/workflows/uptime.yml.
