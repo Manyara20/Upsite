@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "CampaignHQ",
-  "message": "pending",
-  "color": "lightgrey"
+  "message": "up",
+  "color": "brightgreen"
 }
