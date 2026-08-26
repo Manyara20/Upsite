@@ -99,11 +99,14 @@ repository:
   branch: main
 ```
 
-**2. Enable GitHub Pages.** Settings → Pages → Source → **GitHub Actions**.
-
-**3. Allow the workflows to write.** Settings → Actions → General → Workflow
+**2. Allow the workflows to write.** Settings → Actions → General → Workflow
 permissions → **Read and write permissions**. Without this the checks run but
 nothing is committed and no issue is ever opened.
+
+**3. GitHub Pages** turns itself on: `site.yml` passes `enablement: true` to
+`actions/configure-pages`. If your organisation blocks that, set it by hand at
+Settings → Pages → Source → **GitHub Actions** — the symptom is the build
+failing with `Get Pages site failed ... Not Found`.
 
 **4. Add the Slack webhook** (optional). Settings → Secrets and variables →
 Actions → new secret named `SLACK_WEBHOOK_URL`. A Discord webhook URL works
