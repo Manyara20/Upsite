@@ -1,0 +1,22 @@
+id: campaign-top
+name: CampaignHQ
+target: https://campaignhq.top
+status: pending
+since: 2026-08-26T11:14:15.284Z
+lastUpdated: 2026-08-26T11:14:15.284Z
+consecutiveFailures: 0
+consecutiveDegraded: 0
+today:
+  d: 2026-08-26
+  n: 0
+  down: 0
+  deg: 0
+  sum: 0
+  max: 0
+window:
+  d: 2026-08-26T11:14:15.284Z
+  n: 0
+  down: 0
+  deg: 0
+  sum: 0
+  max: 0

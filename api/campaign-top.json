@@ -1,0 +1,34 @@
+{
+  "id": "campaign-top",
+  "name": "CampaignHQ",
+  "kind": "http",
+  "target": "https://campaignhq.top",
+  "url": "https://campaignhq.top",
+  "tags": [
+    "prod",
+    "live"
+  ],
+  "secure": false,
+  "intervalSeconds": 300,
+  "state": {
+    "status": "pending",
+    "since": 1787742855284,
+    "lastCheck": 1787742855284,
+    "consecutiveFailures": 0
+  },
+  "recent": [],
+  "daily": [],
+  "uptime": {
+    "day": null,
+    "week": null,
+    "month": null,
+    "quarter": null
+  },
+  "latency": {
+    "avg": null,
+    "p95": null,
+    "min": null,
+    "max": null
+  },
+  "incidents": []
+}
