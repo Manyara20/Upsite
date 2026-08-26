@@ -195,6 +195,22 @@ repository private if the URL itself must not be known.
 Without the secret set, protected monitors are simply never published — the
 same behaviour as before.
 
+To turn it on in one go:
+
+```bash
+./scripts/setup-secure.sh
+```
+
+It generates a key, stores it as the `UPSITE_SECURE_KEY` secret (encrypted
+with the repository's public key, as a libsodium sealed box), triggers the
+Uptime workflow, waits for it, and checks that the published `api/secure.json`
+opens with the key. Pass `--key '…'` to use a passphrase you already have, or
+`--no-run` to set the secret and let the next scheduled tick do the sealing.
+
+It needs `curl`, `python3` with `pynacl`, and a GitHub token carrying `repo`
+and `workflow` scope — exported as `GITHUB_TOKEN` or pasted at the prompt,
+where it is read without echo and never written to disk.
+
 ## Adding a website from the UI
 
 The **Add a website** button composes a valid `monitors:` entry from a URL,
