@@ -11,13 +11,13 @@ product, git is the database — with a Next.js status site in place of Sapper.
 
 | Monitor | Status | Response | 24h | 7d | 30d | 90d | Graph |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 🟩 [Kichaka](https://kichaka.top) | up | 173 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
-| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 24 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kfs.svg) |
-| 🟩 [KIMAP](https://kimap.org) | up | 413 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
-| 🟩 [Protouch](https://protouch.co.ke) | up | 277 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
-| 🟥 [KFC](https://kfc.ac.ke) | down | 10 ms | 0.00% | 0.00% | 0.00% | 0.00% | [graph](./graphs/kfc.svg) |
+| 🟩 [Kichaka](https://kichaka.top) | up | 157 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
+| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 25 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kfs.svg) |
+| 🟩 [KIMAP](https://kimap.org) | up | 409 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
+| 🟩 [Protouch](https://protouch.co.ke) | up | 243 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
+| 🟥 [KFC](https://kfc.ac.ke) | down | 26 ms | 0.00% | 0.00% | 0.00% | 0.00% | [graph](./graphs/kfc.svg) |
 
-_Updated 2026-08-26 10:14 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-08-26 10:22 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
@@ -125,6 +125,24 @@ file for every monitor, creates the incident labels, and builds the first
 > days, and delays or drops scheduled runs under load. Treat five minutes as a
 > target, not a guarantee — the status site says as much, and flags data that
 > has fallen behind.
+
+### Failure emails
+
+GitHub emails you when a workflow run fails, and `uptime.yml` runs 288 times a
+day — so one wedged config would send 288 identical emails.
+
+The uptime run therefore escalates a failure **at most once per UTC day**. The
+first failure fails the run (and emails); the rest of that day log an `::error::`
+annotation, stay visible in the Actions tab, and let the run pass. A successful
+run clears the marker in `history/.last-failure-notified`, so the next failure
+after a recovery is reported immediately rather than waiting for tomorrow.
+
+The other workflows run at most four times a day and fail loudly every time.
+
+Optional secrets are safe to leave unset. GitHub substitutes a missing secret
+with an *empty string* rather than nothing, so the config loader treats an
+empty or whitespace-only `${VAR}` as absent — otherwise an unconfigured Slack
+webhook would fail validation and take down every check.
 
 ---
 

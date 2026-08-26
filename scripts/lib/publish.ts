@@ -129,7 +129,9 @@ export async function publish(config: UpsiteConfig): Promise<Published> {
     });
   }
 
-  const passphrase = process.env.UPSITE_SECURE_KEY;
+  // Trimmed for the same reason config placeholders are: an unconfigured
+  // Actions secret arrives as an empty (or whitespace) string, not as absent.
+  const passphrase = process.env.UPSITE_SECURE_KEY?.trim();
   const secureMonitors = all.filter((m) => m.secure);
 
   if (secureMonitors.length > 0) {

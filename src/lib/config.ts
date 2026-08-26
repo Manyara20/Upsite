@@ -11,15 +11,28 @@ import { z } from "zod";
 
 const CONFIG_FILENAME = "upsite.config.yaml";
 
+/**
+ * Whether an environment variable counts as "not configured".
+ *
+ * An empty string has to count. GitHub Actions substitutes `${{ secrets.FOO }}`
+ * with an empty string when the secret does not exist, so an unconfigured
+ * optional secret arrives as a defined-but-empty variable rather than an
+ * absent one — and treating that as a real value fails validation over a
+ * feature nobody asked for.
+ */
+function isUnset(name: string): boolean {
+  const value = process.env[name];
+  return value === undefined || value.trim() === "";
+}
+
 /** Substitutes `${VAR}` with `process.env.VAR` so secrets stay out of the file. */
 function expandString(raw: string): string {
   return raw.replace(/\$\{([A-Z0-9_]+)\}/gi, (whole, name: string) => {
-    const value = process.env[name];
-    if (value === undefined) {
+    if (isUnset(name)) {
       console.warn(`[upsite] config references \${${name}} but it is unset`);
       return whole;
     }
-    return value;
+    return process.env[name]!;
   });
 }
 
@@ -32,14 +45,14 @@ const SOLE_PLACEHOLDER = /^\$\{([A-Z0-9_]+)\}$/i;
  * inside a YAML comment would be "expanded" and warn about nothing.
  *
  * A value that is nothing but an unset placeholder is dropped rather than left
- * as literal `${VAR}`. Optional secrets are the common case (no Slack webhook
- * configured yet), and a literal would fail validation and take the whole run
- * down over a feature nobody asked for.
+ * as literal `${VAR}` — or, on Actions, as the empty string a missing secret
+ * expands to. Optional secrets are the common case, and either form would fail
+ * validation and take the whole run down over a feature nobody asked for.
  */
 function expandEnv(value: unknown): unknown {
   if (typeof value === "string") {
     const sole = SOLE_PLACEHOLDER.exec(value);
-    if (sole && process.env[sole[1]] === undefined) return undefined;
+    if (sole && isUnset(sole[1])) return undefined;
     return expandString(value);
   }
   if (Array.isArray(value)) return value.map(expandEnv).filter((v) => v !== undefined);

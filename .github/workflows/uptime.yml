@@ -38,8 +38,11 @@ jobs:
 
       - run: npm ci --no-audit --no-fund
 
+      # Allowed to fail so the results it *did* write still get committed, and
+      # so the throttle below decides whether this failure emails anyone.
       - name: Run the checks
         id: uptime
+        continue-on-error: true
         run: npm run uptime
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +51,47 @@ jobs:
           # are checked and alerted on, but never published.
           UPSITE_SECURE_KEY: ${{ secrets.UPSITE_SECURE_KEY }}
 
+      # GitHub emails on every failed run, and this one runs 288 times a day.
+      # A wedged config would send 288 identical emails, so a failure is
+      # escalated at most once per UTC day — enough to be told, not enough to
+      # train you to ignore it. Every failing run still logs an ::error::
+      # annotation and is visible in the Actions tab.
+      - name: Decide whether to escalate
+        id: escalate
+        if: always()
+        env:
+          FAILED: ${{ steps.uptime.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          marker="history/.last-failure-notified"
+          today="$(date -u +%F)"
+
+          if [ "$FAILED" != "true" ]; then
+            # Recovered: forget the last failure so the next one is immediate.
+            rm -f "$marker"
+            exit 0
+          fi
+
+          echo "::error::The uptime run failed — see the 'Run the checks' step."
+
+          if [ "$(cat "$marker" 2>/dev/null || true)" = "$today" ]; then
+            echo "A failure was already escalated today ($today); staying quiet."
+            exit 0
+          fi
+
+          mkdir -p history
+          printf '%s\n' "$today" > "$marker"
+          echo "escalate=true" >> "$GITHUB_OUTPUT"
+
       - name: Commit the results
+        if: always()
         uses: ./.github/actions/commit
         with:
           message: "${{ steps.uptime.outputs.summary || 'uptime check' }}"
+
+      # Last, so the commit above lands either way.
+      - name: Fail the run
+        if: steps.escalate.outputs.escalate == 'true'
+        run: |
+          echo "Failing this run so it is reported. Further failures today stay quiet."
+          exit 1
