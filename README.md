@@ -17,7 +17,7 @@ product, git is the database — with a Next.js status site in place of Sapper.
 | 🟨 [Protouch](https://protouch.co.ke) | degraded | 3807 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
 | 🟥 [KFC](https://kfc.ac.ke) | down | 8 ms | 0.00% | 0.00% | 0.00% | 0.00% | [graph](./graphs/kfc.svg) |
 
-_Updated 2026-08-26 08:29 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-08-26 09:23 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
