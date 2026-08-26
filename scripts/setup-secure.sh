@@ -11,9 +11,10 @@
 # https://github.com/settings/tokens and either export GITHUB_TOKEN or paste it
 # when prompted — it is read without echo and never written to disk.
 #
-#   ./scripts/setup-secure.sh                 # generate a key
-#   ./scripts/setup-secure.sh --key '…'       # use one you already have
-#   ./scripts/setup-secure.sh --no-run        # set the secret, don't dispatch
+#   ./scripts/setup-secure.sh                    # generate a key
+#   ./scripts/setup-secure.sh --key '…'          # use one you already have
+#   ./scripts/setup-secure.sh --no-run           # set the secret, don't dispatch
+#   ./scripts/setup-secure.sh --token-file ~/.gh # read the token from a file
 #
 set -euo pipefail
 
@@ -32,10 +33,17 @@ cd "$(dirname "$0")/.."
 
 KEY=""
 RUN=true
+TOKEN_FROM_FILE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --key) KEY="${2:-}"; [ -n "$KEY" ] || die "--key needs a value"; shift 2 ;;
     --no-run) RUN=false; shift ;;
+    --token-file)
+      [ -n "${2:-}" ] || die "--token-file needs a path"
+      [ -r "$2" ] || die "cannot read $2"
+      # Trailing newline from an editor is the usual cause of a mystery 401.
+      TOKEN_FROM_FILE="$(tr -d '\r\n' < "$2")"
+      shift 2 ;;
     -h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) die "unknown argument: $1" ;;
   esac
@@ -68,13 +76,45 @@ ok "$OWNER/$REPO on $BRANCH — $PROTECTED protected monitor(s)"
 
 # --- token -----------------------------------------------------------------
 
-TOKEN="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+TOKEN="${TOKEN_FROM_FILE:-${GITHUB_TOKEN:-${GH_TOKEN:-}}}"
+
 if [ -z "$TOKEN" ]; then
-  printf '\nGitHub token (repo + workflow scope, input hidden): '
-  read -rs TOKEN
-  printf '\n'
+  # Prompt on the terminal rather than stdin. Run from a wrapper — Claude
+  # Code's `!` prefix, a CI step, anything piping into this — stdin is not a
+  # terminal and `read` would see EOF and report "no token" instantly.
+  # Opening it is the only real test: `[ -r /dev/tty ]` passes for a process
+  # with no controlling terminal, and the open then fails with ENXIO.
+  # The redirection must wrap the whole group: a `2>/dev/null` on the `exec`
+  # itself is applied after the failing open, so bash still prints the error.
+  # A group does not fork, so fd 3 stays open in this shell.
+  if { exec 3<>/dev/tty; } 2>/dev/null; then
+    printf '\nGitHub token (repo + workflow scope, input hidden): ' >&3
+    IFS= read -rs TOKEN <&3 || true
+    printf '\n' >&3
+    exec 3>&-
+  fi
 fi
-[ -n "$TOKEN" ] || die "no token given"
+
+if [ -z "$TOKEN" ]; then
+  cat >&2 <<'EOF'
+
+error: no token available, and there is no terminal to prompt on.
+
+Give it one of these ways instead:
+
+  # from a file — keeps the token out of shell history
+  printf '%s' 'ghp_…' > ~/.upsite-token && chmod 600 ~/.upsite-token
+  ./scripts/setup-secure.sh --token-file ~/.upsite-token
+
+  # or from the environment
+  export GITHUB_TOKEN=ghp_…
+  ./scripts/setup-secure.sh
+
+The token needs `repo` and `workflow` scope:
+https://github.com/settings/tokens
+EOF
+  exit 1
+fi
 
 # `-w %{http_code}` with the body to stdout lets one call yield both.
 api() {
