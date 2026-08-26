@@ -94,6 +94,11 @@ monitors:
     url: https://kfc.ac.ke
     tags: [production, web]
 
+      - id: campaign-top
+    name: CampaignHQ
+    url: https://campaignhq.top
+    tags: [prod, live]
+
   # Protected. Checked and alerted on exactly like the others, but published
   # only into api/secure.json, which is AES-GCM ciphertext sealed with the
   # UPSITE_SECURE_KEY repository secret. The protected tab asks for that key
