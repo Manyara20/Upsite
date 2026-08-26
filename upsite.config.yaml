@@ -94,7 +94,7 @@ monitors:
     url: https://kfc.ac.ke
     tags: [production, web]
 
-      - id: campaign-top
+  - id: campaign-top
     name: CampaignHQ
     url: https://campaignhq.top
     tags: [prod, live]
