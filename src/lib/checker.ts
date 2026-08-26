@@ -154,6 +154,19 @@ async function probeOnce(m: ResolvedMonitor): Promise<Probe> {
 export async function runCheck(m: ResolvedMonitor): Promise<CheckResult> {
   let probe = await probeOnce(m);
 
+  // Warm-up. A fresh process pays DNS, TCP and TLS on its first request to a
+  // host — and on a CI runner *every* check is a fresh process. Measured cold,
+  // a healthy site swings by an order of magnitude run to run (one of these
+  // was observed at 5664ms cold and 492ms warm) and trips `degradedMs` at
+  // random. Discarding a successful first probe and timing the second reports
+  // the server's response time instead of the runner's connection setup.
+  //
+  // A failed first probe is kept: it is already the answer, and nothing that
+  // is genuinely down becomes up on a warm connection.
+  if (m.warmup && probe.health !== "down") {
+    probe = await probeOnce(m);
+  }
+
   for (let attempt = 0; probe.health === "down" && attempt < m.retries; attempt++) {
     await new Promise((r) => setTimeout(r, 250 * (attempt + 1)));
     probe = await probeOnce(m);

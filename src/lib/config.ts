@@ -92,6 +92,8 @@ const commonMonitor = z.object({
   /** Consecutive failures required before the monitor is declared down. */
   failureThreshold: z.number().int().min(1).optional(),
   retries: z.number().int().min(0).max(5).optional(),
+  /** Discard a first successful probe and time the second. See `runCheck`. */
+  warmup: z.boolean().optional(),
   paused: z.boolean().default(false),
   /**
    * Keeps the monitor off the published status site: no page, no entry in
@@ -161,6 +163,13 @@ const configSchema = z.object({
       degradedMs: z.number().int().min(1).default(1_500),
       failureThreshold: z.number().int().min(1).default(2),
       retries: z.number().int().min(0).max(5).default(1),
+      /**
+       * Send a throwaway request before the one that gets timed, so the
+       * recorded latency excludes DNS, TCP and TLS setup. Every check on a CI
+       * runner starts from a cold process, and that setup cost is both large
+       * and wildly variable — it drowns the signal it is measured alongside.
+       */
+      warmup: z.boolean().default(true),
     })
     .default({}),
   retention: z
@@ -218,6 +227,7 @@ export type ResolvedMonitor = RawMonitor & {
   degradedMs: number;
   failureThreshold: number;
   retries: number;
+  warmup: boolean;
 };
 
 export interface UpsiteConfig extends Omit<RawConfig, "monitors"> {
@@ -241,6 +251,7 @@ function resolve(config: RawConfig): UpsiteConfig {
       degradedMs: m.degradedMs ?? d.degradedMs,
       failureThreshold: m.failureThreshold ?? d.failureThreshold,
       retries: m.retries ?? d.retries,
+      warmup: m.warmup ?? d.warmup,
     } as ResolvedMonitor;
   });
 

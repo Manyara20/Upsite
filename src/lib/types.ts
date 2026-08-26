@@ -136,6 +136,8 @@ export interface MonitorHistory {
   code?: number;
   error?: string;
   consecutiveFailures: number;
+  /** Consecutive slow-but-passing checks, debounced the same way. */
+  consecutiveDegraded: number;
   /** Today's accumulating rollup, sealed into `<id>.daily.json` at midnight. */
   today: DayBucket;
   /**

@@ -55,6 +55,7 @@ export function loadHistory(m: ResolvedMonitor): MonitorHistory {
     since: new Date(now).toISOString(),
     lastUpdated: new Date(now).toISOString(),
     consecutiveFailures: 0,
+    consecutiveDegraded: 0,
     today: emptyBucket(utcDay(now)),
     window: emptyBucket(new Date(now).toISOString()),
   };
@@ -69,6 +70,7 @@ export function loadHistory(m: ResolvedMonitor): MonitorHistory {
     ...stored,
     name: m.name,
     target: monitorTarget(m),
+    consecutiveDegraded: stored.consecutiveDegraded ?? 0,
     today: stored.today ?? seeded.today,
     window: stored.window ?? seeded.window,
   };
@@ -161,19 +163,26 @@ export function applyCheck(
   }
 
   // --- debounced status ---------------------------------------------------
+  // Both failure modes are debounced, and for the same reason: one bad check
+  // must not open an incident and a GitHub issue. `degraded` needs it just as
+  // much as `down` — it is a latency threshold, and latency is noisy.
   history.consecutiveFailures = result.s === "down" ? history.consecutiveFailures + 1 : 0;
+  history.consecutiveDegraded = result.s === "degraded" ? history.consecutiveDegraded + 1 : 0;
+
+  const held = previous === "pending" ? "pending" : previous;
+  const confirmed = (count: number) => count >= monitor.failureThreshold;
 
   const next: MonitorStatus = monitor.paused
     ? "paused"
-    : result.s === "down"
-      ? // Hold the previous status until the failure threshold is met, so a
-        // single blip does not open an incident — or a GitHub issue.
-        history.consecutiveFailures >= monitor.failureThreshold
-        ? "down"
-        : previous === "pending"
-          ? "pending"
-          : previous
-      : result.s;
+    : result.s === "up"
+      ? "up"
+      : result.s === "down"
+        ? confirmed(history.consecutiveFailures)
+          ? "down"
+          : held
+        : confirmed(history.consecutiveDegraded)
+          ? "degraded"
+          : held;
 
   history.lastUpdated = new Date(result.t).toISOString();
   history.responseTime = result.ms;

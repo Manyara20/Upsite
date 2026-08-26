@@ -8,14 +8,29 @@ import { getConfig } from "./src/lib/config";
  * API in the browser.
  */
 
-// A GitHub Pages *project* site lives under /<repo>. The workflow passes what
-// `actions/configure-pages` worked out, which wins over the configured value so
-// a custom domain needs no edit to the YAML.
-//
-// That action reports "/" for a root-served site, and Next rejects a basePath
-// of "/" — normalise it away along with any trailing slash.
-const configured = process.env.UPSITE_BASE_PATH ?? getConfig().site.basePath;
-const basePath = configured.replace(/\/+$/, "");
+/**
+ * Where this particular deployment is served from.
+ *
+ * `site.basePath` describes the GitHub Pages *project* site, which lives under
+ * /<repo>. Anywhere that serves from the root — Vercel, Netlify, `serve out`,
+ * `next dev` — must not get that prefix, or every asset 404s while the
+ * prerendered HTML still renders, which looks like a working page with dead
+ * JavaScript rather than like a build error.
+ */
+function resolveBasePath(): string {
+  // Set explicitly by the site workflow, from `actions/configure-pages`. It
+  // wins over everything, so a custom domain needs no edit to the YAML.
+  if (process.env.UPSITE_BASE_PATH !== undefined) return process.env.UPSITE_BASE_PATH;
+
+  // Hosts that serve the export from the root and set their own build env.
+  if (process.env.VERCEL || process.env.NETLIFY) return "";
+
+  return getConfig().site.basePath;
+}
+
+// `configure-pages` reports "/" for a root-served site and Next rejects a
+// basePath of "/", so normalise that away along with any trailing slash.
+const basePath = resolveBasePath().replace(/\/+$/, "");
 
 const nextConfig: NextConfig = {
   output: "export",

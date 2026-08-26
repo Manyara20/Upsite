@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "Protouch",
-  "message": "degraded",
-  "color": "yellow"
+  "message": "up",
+  "color": "brightgreen"
 }

@@ -11,14 +11,16 @@
     "monitorId": "simba",
     "startedAt": 1787732031159,
     "severity": "degraded",
-    "reason": "Responded in 5771ms"
+    "reason": "Responded in 5771ms",
+    "endedAt": 1787737328880
   },
   {
     "id": "protouch-1787732029680",
     "monitorId": "protouch",
     "startedAt": 1787732029680,
     "severity": "degraded",
-    "reason": "Responded in 4279ms"
+    "reason": "Responded in 4279ms",
+    "endedAt": 1787737328859
   },
   {
     "id": "kfs-1787732031158",
