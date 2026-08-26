@@ -30,12 +30,20 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: str
 export function MonitorCard({
   monitor,
   index,
+  href,
 }: {
   monitor: MonitorSnapshot;
   index: number;
+  /**
+   * Detail page for this monitor, or null when there is none. Protected
+   * monitors have no page: the export only generates routes for monitors whose
+   * data is published in the clear.
+   */
+  href?: string | null;
 }) {
   const style = STATUS_STYLE[monitor.state.status];
   const { state } = monitor;
+  const target = href === undefined ? `/monitor/${monitor.id}` : href;
 
   return (
     <motion.article
@@ -70,13 +78,15 @@ export function MonitorCard({
           </div>
 
           <div className="flex shrink-0 items-center gap-1">
-            <Link
-              href={`/monitor/${monitor.id}`}
-              aria-label={`Open ${monitor.name} details`}
-              className="rounded-lg p-1.5 text-ink-faint transition hover:bg-edge hover:text-signal"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            {target !== null && (
+              <Link
+                href={target}
+                aria-label={`Open ${monitor.name} details`}
+                className="rounded-lg p-1.5 text-ink-faint transition hover:bg-edge hover:text-signal"
+              >
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            )}
           </div>
         </header>
 

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { UpsiteConfig } from "../../src/lib/config";
-import type { MonitorReport, MonitorSnapshot, StatusSnapshot } from "../../src/lib/types";
+import type { Incident, MonitorReport, MonitorSnapshot, StatusSnapshot } from "../../src/lib/types";
 import {
   buildMonitorSnapshot,
   buildSnapshot,
@@ -10,6 +10,7 @@ import {
   loadIncidents,
   loadSamples,
 } from "./history";
+import { seal } from "../../src/lib/crypto";
 import { API_DIR, ROOT, writeJson } from "./repo";
 import { EMOJI, summaryRow } from "./report";
 
@@ -18,9 +19,9 @@ import { EMOJI, summaryRow } from "./report";
  * function of `history/` — so it is always rewritten wholesale rather than
  * patched, and a corrupted output file fixes itself on the next run.
  *
- * Monitors marked `secure` are checked and alerted on like any other, but are
- * omitted here so they never reach the status site. Their `history/` file is
- * still committed — `secure` controls what is published, not what is stored.
+ * Monitors marked `secure` are kept out of every public file. If
+ * `UPSITE_SECURE_KEY` is set they are published too, but sealed — see
+ * `api/secure.json` below. Their `history/` file is committed either way.
  */
 
 export interface Published {
@@ -28,6 +29,32 @@ export interface Published {
   all: MonitorSnapshot[];
   /** What actually got written to `api/`. */
   snapshot: StatusSnapshot;
+}
+
+/**
+ * Seals the protected monitors into `api/secure.json`.
+ *
+ * Called only when `UPSITE_SECURE_KEY` is set, so a repository without the
+ * secret simply never publishes them. The file is AES-GCM ciphertext: the
+ * protected tab asks for the key and decrypts it in the browser, and there is
+ * no plaintext copy anywhere for the gate to be bypassed around.
+ */
+async function publishSecure(
+  config: UpsiteConfig,
+  secureMonitors: MonitorSnapshot[],
+  incidents: Incident[],
+  passphrase: string,
+): Promise<void> {
+  const ids = new Set(secureMonitors.map((m) => m.id));
+
+  const payload = buildSnapshot(
+    config,
+    secureMonitors,
+    incidents.filter((i) => ids.has(i.monitorId)),
+  );
+
+  writeJson(path.join(API_DIR, "secure.json"), await seal(JSON.stringify(payload), passphrase));
+  console.log(`[upsite] sealed ${secureMonitors.length} protected monitor(s) into api/secure.json`);
 }
 
 function shieldColour(status: string): string {
@@ -51,7 +78,7 @@ function latencyColour(ms: number | null): string {
 }
 
 /** Reads every monitor's committed state and rebuilds the published view. */
-export function publish(config: UpsiteConfig): Published {
+export async function publish(config: UpsiteConfig): Promise<Published> {
   const incidents = loadIncidents();
 
   const all = config.monitors.map((m) =>
@@ -100,6 +127,23 @@ export function publish(config: UpsiteConfig): Published {
       message: m.latency.avg === null ? "unknown" : `${m.latency.avg} ms`,
       color: latencyColour(m.latency.avg),
     });
+  }
+
+  const passphrase = process.env.UPSITE_SECURE_KEY;
+  const secureMonitors = all.filter((m) => m.secure);
+
+  if (secureMonitors.length > 0) {
+    if (passphrase) {
+      await publishSecure(config, secureMonitors, incidents, passphrase);
+    } else {
+      // Leave any existing api/secure.json alone: it was sealed with a key
+      // this run does not have, and overwriting or deleting it because of a
+      // missing secret would destroy data the key holder can still read.
+      console.log(
+        `[upsite] UPSITE_SECURE_KEY is unset — ${secureMonitors.length} protected ` +
+          "monitor(s) checked but not published",
+      );
+    }
   }
 
   return { all, snapshot };

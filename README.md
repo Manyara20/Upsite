@@ -17,7 +17,7 @@ product, git is the database — with a Next.js status site in place of Sapper.
 | 🟩 [Protouch](https://protouch.co.ke) | up | 277 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
 | 🟥 [KFC](https://kfc.ac.ke) | down | 10 ms | 0.00% | 0.00% | 0.00% | 0.00% | [graph](./graphs/kfc.svg) |
 
-_Updated 2026-08-26 09:42 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-08-26 10:14 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
@@ -108,9 +108,14 @@ nothing is committed and no issue is ever opened.
 Settings → Pages → Source → **GitHub Actions** — the symptom is the build
 failing with `Get Pages site failed ... Not Found`.
 
-**4. Add the Slack webhook** (optional). Settings → Secrets and variables →
-Actions → new secret named `SLACK_WEBHOOK_URL`. A Discord webhook URL works
-here too — the payload carries a `text` fallback that both accept.
+**4. Add the secrets** (both optional). Settings → Secrets and variables →
+Actions:
+
+- `SLACK_WEBHOOK_URL` — notifications. A Discord webhook URL works here too;
+  the payload carries a `text` fallback that both accept.
+- `UPSITE_SECURE_KEY` — the passphrase that seals the protected monitors. Make
+  it long: the sealed file is public, so a short one is brute-forceable
+  offline by anyone who clones the repo.
 
 **5. Run the Summary workflow once** from the Actions tab. It seeds a history
 file for every monitor, creates the incident labels, and builds the first
@@ -147,16 +152,41 @@ monitors:
 Per-monitor overrides for `timeoutMs`, `degradedMs`, `failureThreshold`,
 `retries` and `paused` all fall back to the `defaults:` block.
 
-### `secure: true`
+### Protected monitors
 
-A monitor marked `secure` is checked and alerted on like any other, but never
-reaches the status site: no page, no entry in `api/`, no graph, no row in the
-table above.
+A monitor marked `secure: true` is checked and alerted on like any other, but
+is kept out of every public file — no page, no entry in `api/`, no graph, no
+row in the table above.
 
-**It is not a secret.** Its `history/<id>.yml` is still committed, and
-`upsite.config.yaml` names the target either way — in a public repository both
-are readable by anyone. If the URL itself must not be known, make the
-repository private; `secure` only controls what gets published.
+If `UPSITE_SECURE_KEY` is set, it is instead published into `api/secure.json`,
+**encrypted**. The status site's Protected tab asks for that key, derives an
+AES-256-GCM key from it with PBKDF2 (300k iterations, SHA-256) and decrypts the
+file in the browser. The key never leaves the repository secret and the
+reader's machine.
+
+That matters because a static site has no server: a protected tab whose gate is
+a client-side comparison protects nothing, since the data behind it is still a
+plain file anyone can request. Here the committed file *is* ciphertext, so
+there is no gate to go around — only the passphrase.
+
+**What it does not cover.** `history/<id>.yml` is still committed in the clear,
+and `upsite.config.yaml` names the target either way. The key protects the
+status, latency and incident data, not the existence of the monitor. Make the
+repository private if the URL itself must not be known.
+
+Without the secret set, protected monitors are simply never published — the
+same behaviour as before.
+
+## Adding a website from the UI
+
+The **Add a website** button composes a valid `monitors:` entry from a URL,
+copies it, and opens `upsite.config.yaml` in GitHub's editor. Committing it is
+what adds the monitor: `summary.yml` picks it up on that push and the next
+5-minute tick checks it.
+
+There is no server to write the config, and that is deliberate — every monitor
+added or removed stays a reviewable diff, which is most of the point of keeping
+the config in git.
 
 ---
 

@@ -15,6 +15,7 @@ export default function HomePage() {
       initial={buildSnapshot()}
       source={buildSource(config)}
       incidentLabels={config.incidents.labels}
+      hasProtected={config.monitors.some((m) => m.secure)}
     />
   );
 }

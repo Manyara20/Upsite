@@ -49,7 +49,7 @@ async function main(): Promise<void> {
   }
 
   // The series the site charts changed, so the derived files have to follow.
-  publish(config);
+  await publish(config);
 
   console.log(`[upsite] recorded response times for ${recorded} monitor(s)`);
 }

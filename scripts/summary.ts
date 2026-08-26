@@ -9,7 +9,7 @@ import { describeFleet, publish, updateReadme } from "./lib/publish";
  */
 async function main(): Promise<void> {
   const config = loadConfig();
-  const { snapshot } = publish(config);
+  const { snapshot } = await publish(config);
   const changed = updateReadme(snapshot.monitors);
 
   console.log(`[upsite] ${describeFleet(snapshot)}`);

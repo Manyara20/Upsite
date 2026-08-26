@@ -51,7 +51,7 @@ async function main(): Promise<void> {
   }
 
   // Give the site something to render before the first check lands.
-  const { snapshot } = publish(config);
+  const { snapshot } = await publish(config);
   updateReadme(snapshot.monitors);
   console.log(`[upsite] wrote api/ and the README table under ${path.relative(process.cwd(), ROOT) || "."}`);
 

@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { ExternalLink, Globe, Search, ShieldCheck } from "lucide-react";
 import { StatusHeader } from "./status-header";
 import { MonitorCard } from "./monitor-card";
 import { IncidentFeed } from "./incident-feed";
 import { UptimeBars } from "./uptime-bars";
 import { StatusLegend } from "./latency-chart";
+import { ProtectedPanel } from "./protected-panel";
+import { AddMonitorDialog } from "./add-monitor-dialog";
 import { useStatus } from "@/hooks/use-status";
 import { cn, formatUptime } from "@/lib/format";
 import { issuesUrl, type Source } from "@/lib/source";
@@ -26,16 +28,20 @@ export function Dashboard({
   initial,
   source,
   incidentLabels,
+  hasProtected,
 }: {
   /** Baked into the export at build time, so the first paint is never empty. */
   initial: StatusSnapshot;
   source: Source;
   incidentLabels: string[];
+  /** Whether any monitor is marked `secure`, so the tab is only shown if used. */
+  hasProtected: boolean;
 }) {
   const { snapshot, connection, refresh, refreshing } = useStatus(initial, source);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [tag, setTag] = useState<string | null>(null);
+  const [tab, setTab] = useState<"public" | "protected">("public");
 
   const monitors = snapshot.monitors;
 
@@ -86,8 +92,52 @@ export function Dashboard({
         source={source}
       />
 
+      <nav className="mt-8 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-1.5" role="tablist" aria-label="Monitor groups">
+          {(
+            [
+              { value: "public", label: "Public", icon: Globe, count: monitors.length },
+              { value: "protected", label: "Protected", icon: ShieldCheck, count: null },
+            ] as const
+          )
+            .filter((t) => t.value === "public" || hasProtected)
+            .map((t) => {
+              const Icon = t.icon;
+              const active = tab === t.value;
+              return (
+                <button
+                  key={t.value}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setTab(t.value)}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs transition",
+                    active
+                      ? "border-signal/40 bg-signal/10 text-signal"
+                      : "border-edge bg-abyss/60 text-ink-dim hover:text-ink",
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {t.label}
+                  {t.count !== null && t.count > 0 && (
+                    <span className="rounded-md bg-edge px-1.5 py-0.5 font-mono text-[10px] text-ink-dim">
+                      {t.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+        </div>
+
+        <AddMonitorDialog source={source} />
+      </nav>
+
+      {tab === "protected" && <ProtectedPanel source={source} />}
+
+      <div hidden={tab !== "public"}>
       {/* Filters live in one row above the data, never beside it. */}
-      <section className="mt-8 flex flex-wrap items-center gap-3">
+      <section className="mt-6 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-faint" />
           <input
@@ -206,6 +256,8 @@ export function Dashboard({
           <IncidentFeed incidents={snapshot.incidents} names={names} />
         </div>
       </section>
+
+      </div>
 
       <footer className="mt-14 border-t border-edge/70 pt-6 text-[11px] text-ink-faint">
         <p>

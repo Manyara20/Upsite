@@ -255,7 +255,7 @@ async function main(): Promise<void> {
 
   saveIncidents(incidents, config.retention.incidents);
 
-  const { snapshot } = publish(config);
+  const { snapshot } = await publish(config);
   updateReadme(snapshot.monitors);
 
   // Read by the workflow to build the commit message.

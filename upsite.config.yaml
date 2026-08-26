@@ -94,13 +94,16 @@ monitors:
     url: https://kfc.ac.ke
     tags: [production, web]
 
-  # Checked and alerted on exactly like the others, but kept off the status
-  # site: no page, no api/ entry, no graph, no README row.
+  # Protected. Checked and alerted on exactly like the others, but published
+  # only into api/secure.json, which is AES-GCM ciphertext sealed with the
+  # UPSITE_SECURE_KEY repository secret. The protected tab asks for that key
+  # and decrypts it in the browser.
   #
-  # Not a secret. history/simba.yml is still committed and the url below is
-  # right here in a public repo — make the repo private if that matters.
+  # Caveat worth knowing: history/simba.yml is still committed in the clear,
+  # and this config names the URL either way. What the key protects is the
+  # status, latency and incident data — not the fact that the site exists.
   - id: simba
-    name: Simba
+    name: Simba 2027
     url: https://bitok.campaignhq.top
     secure: true
     tags: [private]

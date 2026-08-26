@@ -44,6 +44,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # Seals the protected monitors into api/secure.json. Unset means they
+          # are checked and alerted on, but never published.
+          UPSITE_SECURE_KEY: ${{ secrets.UPSITE_SECURE_KEY }}
 
       - name: Commit the results
         uses: ./.github/actions/commit

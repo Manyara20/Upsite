@@ -42,8 +42,11 @@ jobs:
       - run: npm run setup
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPSITE_SECURE_KEY: ${{ secrets.UPSITE_SECURE_KEY }}
 
       - run: npm run summary
+        env:
+          UPSITE_SECURE_KEY: ${{ secrets.UPSITE_SECURE_KEY }}
 
       - uses: ./.github/actions/commit
         with:

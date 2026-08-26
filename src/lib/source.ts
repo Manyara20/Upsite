@@ -1,3 +1,4 @@
+import type { Sealed } from "./crypto";
 import type { MonitorReport, StatusSnapshot } from "./types";
 
 /**
@@ -18,7 +19,16 @@ export interface Source {
 const API = "https://api.github.com";
 const RAW = "https://raw.githubusercontent.com";
 
-class SourceError extends Error {}
+export class SourceError extends Error {
+  constructor(
+    message: string,
+    /** HTTP status from the last attempt, so callers can tell 404 apart. */
+    readonly status?: number,
+  ) {
+    super(message);
+    this.name = "SourceError";
+  }
+}
 
 async function get(source: Source, file: string, signal?: AbortSignal): Promise<unknown> {
   const { owner, name, branch } = source;
@@ -36,7 +46,7 @@ async function get(source: Source, file: string, signal?: AbortSignal): Promise<
     );
     if (res.ok) return await res.json();
     if (res.status !== 403 && res.status !== 429) {
-      throw new SourceError(`GitHub API returned ${res.status} for ${file}`);
+      throw new SourceError(`GitHub API returned ${res.status} for ${file}`, res.status);
     }
     // 403/429 is the anonymous rate limit. Fall through rather than fail: a
     // slightly stale page beats an empty one.
@@ -51,7 +61,7 @@ async function get(source: Source, file: string, signal?: AbortSignal): Promise<
     `${RAW}/${owner}/${name}/${branch}/${file}?t=${Math.floor(Date.now() / 30_000)}`,
     { cache: "no-store", signal },
   );
-  if (!res.ok) throw new SourceError(`Could not read ${file} (${res.status})`);
+  if (!res.ok) throw new SourceError(`Could not read ${file} (${res.status})`, res.status);
   return await res.json();
 }
 
@@ -65,6 +75,15 @@ export function fetchMonitor(
   signal?: AbortSignal,
 ): Promise<MonitorReport> {
   return get(source, `api/${id}.json`, signal) as Promise<MonitorReport>;
+}
+
+/**
+ * The sealed protected-monitor payload. Read through exactly the same path as
+ * the public data — it is just another committed file; the difference is that
+ * this one is ciphertext until the reader supplies the key.
+ */
+export function fetchSealed(source: Source, signal?: AbortSignal): Promise<Sealed> {
+  return get(source, "api/secure.json", signal) as Promise<Sealed>;
 }
 
 /** Link to the issue holding an incident's reports, or to the issue list. */

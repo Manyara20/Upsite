@@ -31,6 +31,8 @@ jobs:
       - run: npm ci --no-audit --no-fund
 
       - run: npm run response-time
+        env:
+          UPSITE_SECURE_KEY: ${{ secrets.UPSITE_SECURE_KEY }}
 
       - uses: ./.github/actions/commit
         with:
