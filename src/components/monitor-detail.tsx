@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, RefreshCw } from "lucide-react";
 import { LatencyChart, StatusLegend } from "./latency-chart";
@@ -16,7 +16,8 @@ import {
   STATUS_LABEL,
   STATUS_STYLE,
 } from "@/lib/format";
-import type { Incident, MonitorSnapshot, StreamEvent } from "@/lib/types";
+import { badgeUrl, fetchMonitor, type Source } from "@/lib/source";
+import type { MonitorReport } from "@/lib/types";
 
 function Figure({
   label,
@@ -38,69 +39,54 @@ function Figure({
   );
 }
 
+/**
+ * Checks land every 5 minutes, and anonymous GitHub API calls are capped at 60
+ * an hour per IP — so a slower poll is both sufficient and the neighbourly
+ * choice when the dashboard may be open in another tab.
+ */
+const POLL_MS = 120_000;
+
 export function MonitorDetail({
   initial,
-  incidents: initialIncidents,
+  source,
 }: {
-  initial: MonitorSnapshot;
-  incidents: Incident[];
+  initial: MonitorReport;
+  source: Source;
 }) {
-  const [monitor, setMonitor] = useState(initial);
-  const [incidents, setIncidents] = useState(initialIncidents);
-  const [checking, startChecking] = useTransition();
+  const [report, setReport] = useState(initial);
+  const [refreshing, setRefreshing] = useState(false);
+  const inFlight = useRef<AbortController | null>(null);
 
-  // Same stream as the dashboard, filtered down to this one monitor.
+  // `api/<id>.json` carries the full series this page charts, which is why the
+  // detail view reads its own file rather than the summary the dashboard uses.
+  const refresh = useCallback(async () => {
+    inFlight.current?.abort();
+    const controller = new AbortController();
+    inFlight.current = controller;
+    setRefreshing(true);
+    try {
+      setReport(await fetchMonitor(source, initial.id, controller.signal));
+    } catch {
+      // Keep the last good data on screen; the next poll will correct it.
+    } finally {
+      if (!controller.signal.aborted) setRefreshing(false);
+    }
+  }, [source, initial.id]);
+
   useEffect(() => {
-    const source = new EventSource("/api/stream");
-
-    const refetch = async () => {
-      const res = await fetch(`/api/monitors/${initial.id}`, { cache: "no-store" });
-      if (res.ok) setMonitor((await res.json()) as MonitorSnapshot);
+    void refresh();
+    const timer = setInterval(() => void refresh(), POLL_MS);
+    return () => {
+      clearInterval(timer);
+      inFlight.current?.abort();
     };
+  }, [refresh]);
 
-    source.onmessage = (message) => {
-      const event = JSON.parse(message.data) as StreamEvent;
-
-      if (event.type === "hello") {
-        const fresh = event.snapshot.monitors.find((m) => m.id === initial.id);
-        if (fresh) setMonitor(fresh);
-        setIncidents(event.snapshot.incidents.filter((i) => i.monitorId === initial.id));
-        return;
-      }
-
-      if (event.monitorId !== initial.id) return;
-
-      if (event.type === "transition") {
-        void refetch();
-        setIncidents((prev) => {
-          if (!event.incident) return prev;
-          const rest = prev.filter((i) => i.id !== event.incident!.id);
-          return [event.incident, ...rest];
-        });
-        return;
-      }
-
-      setMonitor((prev) => ({
-        ...prev,
-        state: event.state,
-        recent: [...prev.recent, event.result].slice(-2880),
-      }));
-    };
-
-    return () => source.close();
-  }, [initial.id]);
-
+  const { incidents, ...monitor } = report;
   const style = STATUS_STYLE[monitor.state.status];
 
-  const recheck = () =>
-    startChecking(async () => {
-      await fetch(`/api/check?id=${encodeURIComponent(monitor.id)}`, { method: "POST" });
-      const res = await fetch(`/api/monitors/${monitor.id}`, { cache: "no-store" });
-      if (res.ok) setMonitor((await res.json()) as MonitorSnapshot);
-    });
-
   return (
-    <main className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8">
+    <main id="main" className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8">
       <Link
         href="/"
         className="inline-flex items-center gap-1.5 text-xs text-ink-dim transition hover:text-signal"
@@ -122,7 +108,7 @@ export function MonitorDetail({
               <span className="text-ink-faint">
                 {" "}
                 for {formatSince(monitor.state.since)} · checked every{" "}
-                {monitor.intervalSeconds}s
+                {Math.round(monitor.intervalSeconds / 60)} min
               </span>
             </p>
 
@@ -148,12 +134,12 @@ export function MonitorDetail({
 
           <button
             type="button"
-            onClick={recheck}
-            disabled={checking}
+            onClick={() => void refresh()}
+            disabled={refreshing}
             className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-abyss px-3 py-1.5 text-[11px] text-ink-dim transition hover:border-signal/40 hover:text-signal disabled:opacity-50"
           >
-            <RefreshCw className={cn("h-3 w-3", checking && "animate-spin")} />
-            {checking ? "Checking…" : "Check now"}
+            <RefreshCw className={cn("h-3 w-3", refreshing && "animate-spin")} />
+            {refreshing ? "Refreshing…" : "Refresh"}
           </button>
         </div>
 
@@ -191,7 +177,7 @@ export function MonitorDetail({
         {/* The unit lives here rather than on the axis, where a rotated label
             collides with the topmost tick. */}
         <p className="mb-4 mt-0.5 text-xs text-ink-faint">
-          Milliseconds · every retained check, oldest to newest
+          Milliseconds · one point per 6-hour recording, oldest to newest
         </p>
         <LatencyChart checks={monitor.recent} />
       </section>
@@ -222,23 +208,24 @@ export function MonitorDetail({
       <section className="glass mt-8 rounded-2xl border border-edge p-6">
         <h2 className="text-sm font-medium text-ink">Embeddable badges</h2>
         <p className="mb-4 mt-0.5 text-xs text-ink-faint">
-          Rendered locally — no third-party badge service involved
+          shields.io rendering the endpoint files this monitor commits to the repository
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          {["status", "uptime", "response"].map((type) => (
+          {(["shields", "uptime", "response-time"] as const).map((kind) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
-              key={type}
-              src={`/api/badge/${monitor.id}?type=${type}`}
-              alt={`${monitor.name} ${type} badge`}
+              key={kind}
+              src={badgeUrl(source, monitor.id, kind)}
+              alt={`${monitor.name} ${kind.replace("shields", "status")} badge`}
               height={20}
             />
           ))}
         </div>
         <pre className="mt-4 overflow-x-auto rounded-lg border border-edge bg-void/60 p-3 font-mono text-[11px] text-ink-dim">
-          {`![${monitor.name}](/api/badge/${monitor.id}?type=uptime)`}
+          {`![${monitor.name}](${badgeUrl(source, monitor.id, "uptime")})`}
         </pre>
       </section>
+
     </main>
   );
 }

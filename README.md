@@ -1,319 +1,196 @@
 # Upsite
 
-A futuristic uptime monitoring platform, built on Upptime's core idea — **the
-config file is the product** — but running as a live application instead of a
-static site.
+Uptime monitoring with **no server and no database**. GitHub Actions runs the
+checks, this repository stores the results, GitHub Issues holds the incident
+reports, and GitHub Pages serves the status site.
 
-**No database.** Configuration is one YAML file; state is plain files under
-`.data/`. Nothing else to provision.
+It is [Upptime](https://upptime.js.org)'s architecture — the config file is the
+product, git is the database — with a Next.js status site in place of Sapper.
+
+<!-- upsite:status:start -->
+
+| Monitor | Status | Response | 24h | 7d | 30d | 90d | Graph |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 🟩 [Kichaka](https://kichaka.top) | up | 2347 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
+| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 1121 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kfs.svg) |
+| 🟩 [KIMAP](https://kimap.org) | up | 2413 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
+| 🟨 [Protouch](https://protouch.co.ke) | degraded | 3807 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
+| 🟥 [KFC](https://kfc.ac.ke) | down | 8 ms | 0.00% | 0.00% | 0.00% | 0.00% | [graph](./graphs/kfc.svg) |
+
+_Updated 2026-08-26 08:24 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+<!-- upsite:status:end -->
 
 ---
 
 ## How it works
 
 ```
-upsite.config.yaml ──► config.ts ──► engine.ts (one timer per monitor)
-                                        │
-                                        ├─► checker.ts   HTTP / TCP probe
-                                        ├─► store.ts     memory + .data/*.jsonl
-                                        ├─► events.ts ──► /api/stream (SSE) ──► dashboard
-                                        └─► notify.ts    webhooks / Slack
+upsite.config.yaml
+        │
+        ▼
+┌───────────────────────── GitHub Actions ─────────────────────────┐
+│                                                                  │
+│  uptime.yml         */5 * * * *   check every endpoint           │
+│    ├─ checker.ts        HTTP / TCP probe                         │
+│    ├─ history.ts        fold into history/<id>.yml               │
+│    ├─ github.ts         open · comment · lock · close the issue  │
+│    ├─ slack.ts          notify on every transition               │
+│    └─ publish.ts        rewrite api/** and the table above       │
+│                                                                  │
+│  response-time.yml  0 */6 * * *   drain the window into a sample │
+│  graphs.yml         20 0 * * *    redraw graphs/<id>.svg         │
+│  summary.yml        on config push  rebuild everything derived   │
+│  site.yml           on code push    build + deploy to Pages      │
+│                                                                  │
+└──────────────────────────────┬───────────────────────────────────┘
+                               │  git commit
+                               ▼
+                     history/ · api/ · graphs/
+                               │  GitHub API (in the browser)
+                               ▼
+                    GitHub Pages — the status site
 ```
 
-The scheduler boots from `instrumentation.ts`, which Next runs once per server
-process. Each monitor gets its own self-rescheduling timer, so a slow check
-never delays an unrelated fast one, and an in-flight check is never allowed to
-overlap itself.
-
-Reads are served entirely from memory — the dashboard's first paint is
-server-rendered from the store, and the browser then receives every subsequent
-check over a single SSE connection. **It never polls.**
+Every workflow that writes data shares one `concurrency` group, so two runs can
+never race to push the same files, and the commit step rebases and retries if
+one gets there first.
 
 ### Where the data lives
 
-| Path | Contents |
-|---|---|
-| `.data/monitors/<id>.jsonl` | append-only recent checks (compacted on a threshold) |
-| `.data/monitors/<id>.daily.json` | calendar-day rollups, 90 days |
-| `.data/state.json` | current status per monitor |
-| `.data/incidents.json` | incident log |
+| Path | Contents | Written by |
+|---|---|---|
+| `history/<id>.yml` | current status, today's rollup, the open incident | every check |
+| `history/<id>.daily.json` | calendar-day rollups, 90 days | when the UTC day rolls over |
+| `history/<id>.response-time.json` | 6-hourly response-time samples | `response-time.yml` |
+| `history/incidents.json` | the incident log, with issue numbers | on every transition |
+| `api/summary.json` | the whole fleet, for the dashboard | derived |
+| `api/<id>.json` | one monitor's full series, for its page | derived |
+| `api/<id>/{shields,uptime,response-time}.json` | shields.io endpoint badges | derived |
+| `graphs/<id>.svg` | response-time graph | `graphs.yml` |
 
-Raw checks are capped by `retention.recentChecks`; anything older survives only
-as a daily rollup. That keeps disk use flat regardless of uptime, and it is why
-90-day history costs kilobytes rather than a database.
+Everything under `api/` and `graphs/` is a pure function of `history/`. Delete
+it and `npm run summary` puts it back.
 
-State/rollup writes are debounced and batched; every file is written to a temp
-path and renamed, so a crash can never leave a half-written file.
+`history/<id>.yml` accumulates a **window** between response-time recordings, so
+each committed sample is the mean of roughly 72 checks rather than whichever
+single probe landed on the hour. That is what keeps the daily graphs readable.
+
+### Incidents are GitHub issues
+
+The first check that crosses `failureThreshold` opens an issue, assigns it to
+everyone in `incidents.assignees`, and locks it so people outside the
+organisation cannot comment. While the outage continues, follow-up reports are
+posted as comments — throttled to `commentThrottleMinutes`, but always
+immediately when the failure reason changes. On recovery the issue gets a
+closing report with the total downtime and closes itself.
+
+Each step also goes to Slack, if `SLACK_WEBHOOK_URL` is set.
 
 ---
 
-## Getting started
+## Setting it up
 
-```bash
-npm install
-npm run dev          # http://localhost:3000
-```
-
-Production:
-
-```bash
-npm run build
-npm start
-```
-
----
-
-## Configuration
-
-Everything lives in `upsite.config.yaml`. Any string may reference an
-environment variable as `${VAR}`, so tokens never have to be committed.
+**1. Point the config at your repository.**
 
 ```yaml
-site:
-  name: Upsite
-  tagline: Real-time uptime intelligence
+repository:
+  owner: your-username
+  name: your-repo
+  branch: main
+```
 
-defaults:
-  intervalSeconds: 60
-  timeoutMs: 10000
-  degradedMs: 1500      # slower than this → "degraded" instead of "up"
-  failureThreshold: 2   # consecutive failures before declaring an outage
-  retries: 1            # immediate retries before a check counts as failed
+**2. Enable GitHub Pages.** Settings → Pages → Source → **GitHub Actions**.
 
+**3. Allow the workflows to write.** Settings → Actions → General → Workflow
+permissions → **Read and write permissions**. Without this the checks run but
+nothing is committed and no issue is ever opened.
+
+**4. Add the Slack webhook** (optional). Settings → Secrets and variables →
+Actions → new secret named `SLACK_WEBHOOK_URL`. A Discord webhook URL works
+here too — the payload carries a `text` fallback that both accept.
+
+**5. Run the Summary workflow once** from the Actions tab. It seeds a history
+file for every monitor, creates the incident labels, and builds the first
+`api/`. After that the schedule takes over.
+
+> GitHub disables scheduled workflows in a repository with no activity for 60
+> days, and delays or drops scheduled runs under load. Treat five minutes as a
+> target, not a guarantee — the status site says as much, and flags data that
+> has fallen behind.
+
+---
+
+## Adding a monitor
+
+Add it to `upsite.config.yaml` and push. `summary.yml` picks it up immediately;
+the next 5-minute tick checks it.
+
+```yaml
 monitors:
-  - id: my-api
-    name: My API
+  - id: api            # url-safe, and permanent: it names the data files
+    name: Public API
     url: https://api.example.com/health
+    tags: [production]
     expectStatus: [200]
     expectText: '"ok":true'
-    intervalSeconds: 30
-    tags: [prod, api]
+    degradedMs: 800
 
-  - id: my-db-port
-    name: Postgres
+  - id: postgres
     type: tcp
-    host: db.internal
+    host: db.example.com
     port: 5432
 ```
 
-### Monitor options
+Per-monitor overrides for `timeoutMs`, `degradedMs`, `failureThreshold`,
+`retries` and `paused` all fall back to the `defaults:` block.
 
-| Key | Applies to | Meaning |
-|---|---|---|
-| `id` | all | URL-safe slug; also the on-disk filename |
-| `secure` | all | hide behind the password gate (still checked) |
-| `type` | all | `http` (default) or `tcp` |
-| `url`, `method`, `headers`, `body` | http | request to send |
-| `expectStatus` | http | acceptable codes (default: any 2xx/3xx) |
-| `expectText` / `rejectText` | http | body must / must not contain |
-| `followRedirects` | http | default `true` |
-| `host`, `port` | tcp | connection target |
-| `intervalSeconds`, `timeoutMs`, `degradedMs` | all | override the defaults |
-| `failureThreshold`, `retries` | all | how hard to try before calling it down |
-| `paused` | all | defined but not checked |
-| `tags`, `description` | all | dashboard metadata |
+### `secure: true`
 
-### Degraded vs. down
+A monitor marked `secure` is checked and alerted on like any other, but never
+reaches the status site: no page, no entry in `api/`, no graph, no row in the
+table above.
 
-A check that succeeds but exceeds `degradedMs` is **degraded** — the endpoint
-works, but slowly. A check that fails is retried `retries` times immediately;
-only after `failureThreshold` *consecutive* failed checks does the monitor go
-**down** and open an incident. Single blips stay out of the incident log.
+**It is not a secret.** Its `history/<id>.yml` is still committed, and
+`upsite.config.yaml` names the target either way — in a public repository both
+are readable by anyone. If the URL itself must not be known, make the
+repository private; `secure` only controls what gets published.
 
 ---
 
-## API
+## The status site
 
-| Route | Method | Purpose |
-|---|---|---|
-| `/api/status` | GET | full snapshot of every monitor |
-| `/api/monitors` | POST | add a monitor (writes the config, hot-reloads) |
-| `/api/monitors/<id>` | GET | one monitor, with its full retained history |
-| `/api/stream` | GET | SSE feed of every check as it happens |
-| `/api/check` | POST | force a check now (`?id=<id>` for one) |
-| `/api/reload` | POST | re-read the config and rebuild the schedule |
-| `/api/badge/<id>` | GET | SVG badge (`?type=status\|uptime\|response`) |
-| `/api/secure` | GET/POST/DELETE | gate status / unlock / lock |
+A Next.js static export. It is baked with whatever data was committed at build
+time, so the first paint is real, then the browser refreshes from the GitHub
+API — the Contents API first, falling back to `raw.githubusercontent.com` when
+the anonymous rate limit (60 requests an hour) is hit.
 
-Adding a monitor does **not** require a restart:
+It is a PWA: installable, and readable offline from the last status you saw.
 
 ```bash
-$EDITOR upsite.config.yaml
-curl -X POST http://localhost:3000/api/reload
+npm install
+npm run dev            # http://localhost:3000
+npm run build          # static export into out/
 ```
 
-### Badges
+## Running the workflows by hand
+
+```bash
+npm run setup          # validate config, seed history, create labels
+npm run uptime         # one full round of checks
+npm run response-time  # drain the windows into samples
+npm run graphs         # redraw the SVGs
+npm run summary        # rebuild api/ and the table above
+```
+
+`GITHUB_TOKEN` enables the issue lifecycle; without it the scripts do
+everything except talk to GitHub, which is what makes them safe to run locally.
+`SLACK_WEBHOOK_URL` enables notifications.
+
+## Badges
+
+Every public monitor commits shields.io endpoint files, so a badge anywhere
+needs no service beyond shields itself:
 
 ```markdown
-![status](http://localhost:3000/api/badge/my-api)
-![uptime](http://localhost:3000/api/badge/my-api?type=uptime)
-![response](http://localhost:3000/api/badge/my-api?type=response)
+![Uptime](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FManyara20%2FUpsite%2Fmain%2Fapi%2Fkfs%2Fuptime.json)
 ```
-
-Rendered locally — no third-party badge service ever sees your endpoints.
-
----
-
-## Adding monitors from the dashboard
-
-**Add monitor** on the dashboard writes the entry straight into
-`upsite.config.yaml` and hot-reloads the scheduler — the config file stays the
-single source of truth, and the UI is just a friendlier way to edit it. Your
-comments and formatting are preserved; the diff is purely additive.
-
----
-
-## The secure tab
-
-Monitors marked `secure: true` are hidden behind a password. They are **still
-checked on schedule** — only viewing them is gated.
-
-```yaml
-- id: simba
-  name: Simba
-  url: secure
-  secure: true
-```
-
-Set the password in **either** place. The environment always wins:
-
-```bash
-# .env.local — best for a host you control
-UPSITE_SECURE_PASSWORD=your-password
-UPSITE_SECRET=$(openssl rand -hex 32)
-```
-
-```yaml
-# upsite.config.yaml — survives deploys that don't carry your env file
-auth:
-  passwordHash: <printf '%s' 'your-password' | sha256sum>
-```
-
-The config option exists because `.env.local` is gitignored and therefore never
-reaches Vercel or Netlify. Storing the sha256 keeps the plaintext out of the
-repo, but **a short password is recoverable from its hash offline** — treat it
-as obfuscation, not protection. Use the environment variable for anything that
-actually matters.
-
-When `UPSITE_SECRET` is unset, the cookie-signing key is derived from the
-password, so sessions survive restarts and serverless cold starts. Set an
-explicit `UPSITE_SECRET` in production anyway; changing the password
-invalidates every outstanding session either way.
-
-Until unlocked, a secure monitor is **omitted, not masked** — it is absent from
-`/api/status`, the SSE stream, the incident log, the status counts, its detail
-page (404), and its badge. There is nothing in the page source to uncover.
-
-How the gate works, given there is no database: unlocking mints a short-lived
-HMAC-signed token held in an httpOnly cookie, and verifying it is a pure
-function of the token plus `UPSITE_SECRET`. No session store, nothing persisted.
-Passwords are compared in constant time, and unlock attempts are rate-limited.
-
-Set `UPSITE_SECRET`, or a random one is generated per process and every restart
-logs everyone out. Set `UPSITE_COOKIE_SECURE=1` when serving over HTTPS.
-
-> The gate is a viewing password for a private dashboard, not a multi-user auth
-> system: one shared password, no accounts, no roles. Put it behind a VPN or a
-> reverse proxy if you need more than that.
-
----
-
-## Notifications
-
-```yaml
-notifications:
-  webhooks:
-    - https://example.com/hooks/upsite   # full JSON payload
-  slackWebhook: ${SLACK_WEBHOOK_URL}     # also works with Discord
-```
-
-Sent on every status transition, fire-and-forget: a slow or broken webhook can
-never delay or fail the check that triggered it.
-
----
-
-## Environment variables
-
-| Variable | Effect |
-|---|---|
-| `UPSITE_CONFIG` | path to the config file (default `./upsite.config.yaml`) |
-| `UPSITE_DATA_DIR` | path to the datastore (default `./.data`) |
-| `UPSITE_ADMIN_TOKEN` | require `Authorization: Bearer …` on `/api/reload` |
-| `UPSITE_DISABLE_ENGINE` | set to `1` to load the app without scheduling checks |
-| `UPSITE_SECURE_PASSWORD` | password for the secure tab (required to view secure monitors) |
-| `UPSITE_SECRET` | signs the unlock cookie; generate with `openssl rand -hex 32` |
-| `UPSITE_COOKIE_SECURE` | set to `1` when serving over HTTPS |
-
----
-
-## Deploying
-
-Upsite wants **one long-lived Node process with a writable disk** — the
-scheduler and the datastore both live in it. A VPS, a container, Railway,
-Render, Fly.io, or any always-on Node host gives you the full product:
-background checks on their own schedule, and history that survives restarts.
-
-### Serverless (Vercel, Lambda, Netlify)
-
-It runs, but in a reduced mode, and you should know exactly what you give up.
-
-Two platform facts drive this:
-
-1. **The filesystem is read-only.** Upsite detects this and switches to
-   memory-only mode — checks still run, history just doesn't persist.
-2. **The process is frozen between requests**, so a `setTimeout` scheduled
-   during one request never fires. The internal scheduler is therefore
-   disabled, and checks are driven by requests and cron instead.
-
-| | Long-lived host | Serverless |
-|---|---|---|
-| Checks on a schedule | ✅ every `intervalSeconds` | ⚠️ on request + cron only |
-| Uptime history / 90-day bars | ✅ | ❌ resets constantly |
-| Incident log | ✅ | ⚠️ only within one warm instance |
-| Live SSE dashboard | ✅ | ⚠️ ends when the function freezes |
-| Current status | ✅ | ✅ |
-
-So on Vercel, Upsite is a **live status page** — accurate the moment you load
-it — rather than an uptime *recorder*. Loading the page checks anything past
-its interval and shows real results; nothing is remembered between cold starts,
-and different instances have separate memory.
-
-The secure tab works on Vercel with **no environment variables at all**, via
-`auth.passwordHash` in `upsite.config.yaml` (see [The secure tab](#the-secure-tab)).
-For a stronger setup, override it in Vercel → Settings → Environment Variables —
-`.env.local` is gitignored and never deployed:
-
-```
-UPSITE_SECURE_PASSWORD   your password        # overrides the config hash
-UPSITE_SECRET            openssl rand -hex 32 # explicit cookie-signing key
-UPSITE_COOKIE_SECURE     1                    # Vercel is HTTPS
-```
-
-`vercel.json` registers a cron against `/api/cron`. Note that **Vercel's Hobby
-plan allows only one cron run per day**; Pro allows every minute. Any external
-scheduler works too — point it at `/api/cron` and set `CRON_SECRET` to lock the
-endpoint down:
-
-```bash
-curl -H "Authorization: Bearer $CRON_SECRET" https://your-app/api/cron
-```
-
-To get real history on Vercel you would have to add a storage backend
-(Vercel KV, Upstash, Blob) — which is precisely the database this project was
-built to avoid. A $5 VPS or a Railway/Render container keeps the no-database
-design intact and gives you everything.
-
-### Keeping history
-
-Mount `.data/` as a volume so it survives deploys. It is gitignored by design —
-it is the database.
-
-To force serverless mode on a host that isn't auto-detected, set
-`UPSITE_EPHEMERAL=1`; to force the scheduler on, set `UPSITE_EPHEMERAL=0`.
-
----
-
-## Stack
-
-Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
-framer-motion · Recharts · Zod · YAML

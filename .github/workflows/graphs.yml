@@ -1,0 +1,36 @@
+name: Graphs
+
+# Redraws the response-time graphs from the committed samples, once a day.
+on:
+  schedule:
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: upsite-data
+  cancel-in-progress: false
+
+jobs:
+  draw:
+    name: Draw response-time graphs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npm run graphs
+
+      - uses: ./.github/actions/commit
+        with:
+          message: "📊 redraw response-time graphs"

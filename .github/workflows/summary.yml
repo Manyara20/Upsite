@@ -1,0 +1,50 @@
+name: Summary
+
+# Rebuilds everything derived — `api/**` and the README table — from what is
+# already in `history/`. The uptime run does this too; this exists so a config
+# change (a new monitor, a rename) is picked up without waiting for one, and as
+# a self-heal if a derived file is ever hand-edited.
+on:
+  push:
+    branches: [main]
+    paths:
+      - upsite.config.yaml
+  schedule:
+    - cron: "40 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: upsite-data
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    name: Rebuild the published data
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      # Seeds history for monitors added since the last run, and makes sure the
+      # incident labels exist before the first outage needs them.
+      - run: npm run setup
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: npm run summary
+
+      - uses: ./.github/actions/commit
+        with:
+          message: "🔄 rebuild api/ and the status table"

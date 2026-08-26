@@ -1,0 +1,23 @@
+id: kfs
+name: KFS
+target: https://hr.kenyaforestservice.org
+status: up
+since: 2026-08-26T08:24:01.830Z
+lastUpdated: 2026-08-26T08:24:01.830Z
+consecutiveFailures: 0
+today:
+  d: 2026-08-26
+  n: 2
+  down: 0
+  deg: 1
+  sum: 6859
+  max: 5738
+window:
+  d: 2026-08-26T08:14:15.138Z
+  n: 1
+  down: 0
+  deg: 0
+  sum: 1121
+  max: 1121
+responseTime: 1121
+code: 200

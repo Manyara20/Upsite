@@ -1,0 +1,67 @@
+{
+  "id": "kfs",
+  "name": "KFS",
+  "kind": "http",
+  "target": "https://hr.kenyaforestservice.org",
+  "url": "https://hr.kenyaforestservice.org",
+  "tags": [
+    "production",
+    "web"
+  ],
+  "description": "Kenya Forest Service HR portal.",
+  "secure": false,
+  "intervalSeconds": 300,
+  "state": {
+    "status": "up",
+    "since": 1787732641830,
+    "lastCheck": 1787732641830,
+    "lastLatency": 1121,
+    "lastCode": 200,
+    "consecutiveFailures": 0
+  },
+  "recent": [
+    {
+      "t": 1787732055138,
+      "s": "degraded",
+      "ms": 5738
+    },
+    {
+      "t": 1787732641830,
+      "s": "up",
+      "ms": 1121,
+      "c": 200
+    }
+  ],
+  "daily": [
+    {
+      "d": "2026-08-26",
+      "n": 2,
+      "down": 0,
+      "deg": 1,
+      "sum": 6859,
+      "max": 5738
+    }
+  ],
+  "uptime": {
+    "day": 1,
+    "week": 1,
+    "month": 1,
+    "quarter": 1
+  },
+  "latency": {
+    "avg": 3430,
+    "p95": 5738,
+    "min": 1121,
+    "max": 5738
+  },
+  "incidents": [
+    {
+      "id": "kfs-1787732031158",
+      "monitorId": "kfs",
+      "startedAt": 1787732031158,
+      "severity": "degraded",
+      "reason": "Responded in 5738ms",
+      "endedAt": 1787732641830
+    }
+  ]
+}

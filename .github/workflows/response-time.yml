@@ -1,0 +1,37 @@
+name: Response time
+
+# Drains each monitor's rolling window into one committed sample. Runs on the
+# quarter-day so the four daily points land at predictable times.
+on:
+  schedule:
+    - cron: "0 0,6,12,18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: upsite-data
+  cancel-in-progress: false
+
+jobs:
+  record:
+    name: Record response times
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npm run response-time
+
+      - uses: ./.github/actions/commit
+        with:
+          message: "📈 record response times"

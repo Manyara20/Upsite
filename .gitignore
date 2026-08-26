@@ -7,5 +7,5 @@ build
 *.tsbuildinfo
 next-env.d.ts
 
-# Upsite's flat-file datastore — this IS the database. Never commit it.
-.data
+# `history/`, `api/` and `graphs/` are deliberately NOT ignored — they are the
+# database. The workflows commit them on every run.

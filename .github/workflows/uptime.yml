@@ -1,0 +1,51 @@
+name: Uptime
+
+# The heartbeat of the whole system. Every five minutes this checks every
+# endpoint, commits the result, and opens, updates or closes the GitHub issue
+# that represents an outage.
+#
+# GitHub queues scheduled workflows and drops them under load, so treat five
+# minutes as a target rather than a guarantee — the site says so too, and
+# flags data that has fallen behind.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+# Every workflow that writes to `history/` or `api/` shares this group, so two
+# of them can never race to push the same files.
+concurrency:
+  group: upsite-data
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check endpoints
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Run the checks
+        id: uptime
+        run: npm run uptime
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Commit the results
+        uses: ./.github/actions/commit
+        with:
+          message: "${{ steps.uptime.outputs.summary || 'uptime check' }}"

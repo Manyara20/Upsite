@@ -1,0 +1,65 @@
+{
+  "id": "kfc",
+  "name": "KFC",
+  "kind": "http",
+  "target": "https://kfc.ac.ke",
+  "url": "https://kfc.ac.ke",
+  "tags": [
+    "production",
+    "web"
+  ],
+  "secure": false,
+  "intervalSeconds": 300,
+  "state": {
+    "status": "down",
+    "since": 1787732641678,
+    "lastCheck": 1787732641678,
+    "lastLatency": 8,
+    "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
+    "consecutiveFailures": 2
+  },
+  "recent": [
+    {
+      "t": 1787732055138,
+      "s": "down",
+      "ms": 330
+    },
+    {
+      "t": 1787732641678,
+      "s": "down",
+      "ms": 8,
+      "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+    }
+  ],
+  "daily": [
+    {
+      "d": "2026-08-26",
+      "n": 2,
+      "down": 2,
+      "deg": 0,
+      "sum": 338,
+      "max": 330
+    }
+  ],
+  "uptime": {
+    "day": 0,
+    "week": 0,
+    "month": 0,
+    "quarter": 0
+  },
+  "latency": {
+    "avg": null,
+    "p95": null,
+    "min": null,
+    "max": null
+  },
+  "incidents": [
+    {
+      "id": "kfc-1787732641678",
+      "monitorId": "kfc",
+      "startedAt": 1787732641678,
+      "severity": "down",
+      "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+    }
+  ]
+}

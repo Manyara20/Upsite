@@ -1,0 +1,57 @@
+{
+  "id": "kimap",
+  "name": "KIMAP",
+  "kind": "http",
+  "target": "https://kimap.org",
+  "url": "https://kimap.org",
+  "tags": [
+    "production",
+    "web"
+  ],
+  "secure": false,
+  "intervalSeconds": 300,
+  "state": {
+    "status": "up",
+    "since": 1787732028034,
+    "lastCheck": 1787732643841,
+    "lastLatency": 2413,
+    "lastCode": 200,
+    "consecutiveFailures": 0
+  },
+  "recent": [
+    {
+      "t": 1787732055138,
+      "s": "up",
+      "ms": 2303
+    },
+    {
+      "t": 1787732643841,
+      "s": "up",
+      "ms": 2413,
+      "c": 200
+    }
+  ],
+  "daily": [
+    {
+      "d": "2026-08-26",
+      "n": 2,
+      "down": 0,
+      "deg": 0,
+      "sum": 4716,
+      "max": 2413
+    }
+  ],
+  "uptime": {
+    "day": 1,
+    "week": 1,
+    "month": 1,
+    "quarter": 1
+  },
+  "latency": {
+    "avg": 2358,
+    "p95": 2413,
+    "min": 2303,
+    "max": 2413
+  },
+  "incidents": []
+}

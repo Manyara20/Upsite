@@ -23,17 +23,31 @@ function expandString(raw: string): string {
   });
 }
 
+/** Matches a value that is *only* a placeholder, e.g. `${SLACK_WEBHOOK_URL}`. */
+const SOLE_PLACEHOLDER = /^\$\{([A-Z0-9_]+)\}$/i;
+
 /**
  * Walks the parsed document expanding every string value. Deliberately applied
  * after parsing rather than to the raw text — otherwise a `${VAR}` written
  * inside a YAML comment would be "expanded" and warn about nothing.
+ *
+ * A value that is nothing but an unset placeholder is dropped rather than left
+ * as literal `${VAR}`. Optional secrets are the common case (no Slack webhook
+ * configured yet), and a literal would fail validation and take the whole run
+ * down over a feature nobody asked for.
  */
 function expandEnv(value: unknown): unknown {
-  if (typeof value === "string") return expandString(value);
-  if (Array.isArray(value)) return value.map(expandEnv);
+  if (typeof value === "string") {
+    const sole = SOLE_PLACEHOLDER.exec(value);
+    if (sole && process.env[sole[1]] === undefined) return undefined;
+    return expandString(value);
+  }
+  if (Array.isArray(value)) return value.map(expandEnv).filter((v) => v !== undefined);
   if (value && typeof value === "object") {
     return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, expandEnv(v)]),
+      Object.entries(value as Record<string, unknown>)
+        .map(([k, v]) => [k, expandEnv(v)] as const)
+        .filter(([, v]) => v !== undefined),
     );
   }
   return value;
@@ -71,7 +85,7 @@ const commonMonitor = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
   tags: z.array(z.string()).default([]),
-  intervalSeconds: z.number().int().min(5).optional(),
+  intervalSeconds: z.number().int().min(60).optional(),
   timeoutMs: z.number().int().min(100).optional(),
   /** Above this latency a passing check is reported as `degraded`. */
   degradedMs: z.number().int().min(1).optional(),
@@ -80,9 +94,14 @@ const commonMonitor = z.object({
   retries: z.number().int().min(0).max(5).optional(),
   paused: z.boolean().default(false),
   /**
-   * Hides the monitor behind the password gate. It is still checked on
-   * schedule — only its existence and results are withheld from unauthenticated
-   * callers, across every API surface.
+   * Keeps the monitor off the published status site: no page, no entry in
+   * `api/`, no graph, no row in the README table. It is still checked on
+   * schedule and still opens incident issues.
+   *
+   * This is presentation, not secrecy. `history/<id>.yml` is still committed,
+   * and this config file already names the target — in a public repository
+   * both are readable by anyone. Make the repository private if the URL itself
+   * must not be known.
    */
   secure: z.boolean().default(false),
 });
@@ -111,12 +130,33 @@ const configSchema = z.object({
     .object({
       name: z.string().default("Upsite"),
       tagline: z.string().optional(),
+      /** Public URL of the status site, used in issue bodies and Slack links. */
       url: z.string().url().optional(),
+      /**
+       * Sub-path the site is served from. A GitHub Pages *project* site lives
+       * at /<repo>, so the export needs to know its prefix at build time.
+       * Leave empty for a user site or a custom domain.
+       */
+      basePath: z
+        .string()
+        .regex(/^(|\/[a-z0-9._-]+)$/i, 'basePath must be empty or start with "/"')
+        .default(""),
     })
     .default({ name: "Upsite" }),
+
+  /**
+   * Where the data lives. Every check result is committed back to this
+   * repository, and the status site reads it out again through the GitHub API,
+   * so these two fields are what tie the halves together.
+   */
+  repository: z.object({
+    owner: z.string().min(1),
+    name: z.string().min(1),
+    branch: z.string().min(1).default("main"),
+  }),
   defaults: z
     .object({
-      intervalSeconds: z.number().int().min(5).default(60),
+      intervalSeconds: z.number().int().min(60).default(300),
       timeoutMs: z.number().int().min(100).default(10_000),
       degradedMs: z.number().int().min(1).default(1_500),
       failureThreshold: z.number().int().min(1).default(2),
@@ -125,7 +165,7 @@ const configSchema = z.object({
     .default({}),
   retention: z
     .object({
-      /** Raw checks kept per monitor, in memory and on disk. */
+      /** Response-time samples kept per monitor (four are recorded a day). */
       recentChecks: z.number().int().min(60).default(2_880),
       /** Daily rollups kept per monitor. */
       days: z.number().int().min(1).default(90),
@@ -134,21 +174,29 @@ const configSchema = z.object({
     })
     .default({}),
   /**
-   * Password for the secure tab, for deployments where setting an environment
-   * variable is inconvenient (Vercel, Netlify). `UPSITE_SECURE_PASSWORD`
-   * always wins when it is set.
+   * How an outage becomes a GitHub issue. The issue *is* the incident record:
+   * it is opened on the transition to down, commented on as the outage
+   * develops, and closed when the monitor recovers.
    */
-  auth: z
+  incidents: z
     .object({
-      /** sha256 hex of the password — keeps the plaintext out of the repo. */
-      passwordHash: z
-        .string()
-        .regex(/^[a-f0-9]{64}$/i, "passwordHash must be 64 hex characters (sha256)")
-        .optional(),
-      /** Plaintext alternative. Readable by anyone who can read the repo. */
-      password: z.string().min(1).optional(),
+      /** Assigned to every incident issue so an outage always has an owner. */
+      assignees: z.array(z.string()).default([]),
+      /** Applied to every incident issue, and used to find it again later. */
+      labels: z.array(z.string()).min(1).default(["status"]),
+      /** Locks the issue so only repository members can comment. */
+      lock: z.boolean().default(true),
+      /** Closes the issue automatically once the monitor comes back up. */
+      closeOnRecovery: z.boolean().default(true),
+      /**
+       * A check runs every 5 minutes; commenting on every one of them would
+       * bury the issue. A follow-up report is posted at most this often, and
+       * always immediately when the failure reason changes.
+       */
+      commentThrottleMinutes: z.number().int().min(0).default(30),
     })
     .default({}),
+
   notifications: z
     .object({
       /** POSTed a JSON payload on every status transition. */

@@ -1,0 +1,23 @@
+id: kimap
+name: KIMAP
+target: https://kimap.org
+status: up
+since: 2026-08-26T08:13:48.034Z
+lastUpdated: 2026-08-26T08:24:03.841Z
+consecutiveFailures: 0
+today:
+  d: 2026-08-26
+  n: 2
+  down: 0
+  deg: 0
+  sum: 4716
+  max: 2413
+window:
+  d: 2026-08-26T08:14:15.138Z
+  n: 1
+  down: 0
+  deg: 0
+  sum: 2413
+  max: 2413
+responseTime: 2413
+code: 200

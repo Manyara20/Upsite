@@ -1,0 +1,328 @@
+{
+  "site": {
+    "name": "Upsite",
+    "tagline": "Real-time uptime intelligence",
+    "url": "https://manyara20.github.io/Upsite"
+  },
+  "repository": {
+    "owner": "Manyara20",
+    "name": "Upsite",
+    "branch": "main"
+  },
+  "overall": "down",
+  "generatedAt": 1787732645759,
+  "monitors": [
+    {
+      "id": "kichaka",
+      "name": "Kichaka",
+      "kind": "http",
+      "target": "https://kichaka.top",
+      "url": "https://kichaka.top",
+      "tags": [
+        "production",
+        "web"
+      ],
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "up",
+        "since": 1787732027429,
+        "lastCheck": 1787732642952,
+        "lastLatency": 2347,
+        "lastCode": 200,
+        "consecutiveFailures": 0
+      },
+      "recent": [
+        {
+          "t": 1787732055138,
+          "s": "up",
+          "ms": 2136
+        },
+        {
+          "t": 1787732642952,
+          "s": "up",
+          "ms": 2347,
+          "c": 200
+        }
+      ],
+      "daily": [
+        {
+          "d": "2026-08-26",
+          "n": 2,
+          "down": 0,
+          "deg": 0,
+          "sum": 4483,
+          "max": 2347
+        }
+      ],
+      "uptime": {
+        "day": 1,
+        "week": 1,
+        "month": 1,
+        "quarter": 1
+      },
+      "latency": {
+        "avg": 2242,
+        "p95": 2347,
+        "min": 2136,
+        "max": 2347
+      }
+    },
+    {
+      "id": "kfs",
+      "name": "KFS",
+      "kind": "http",
+      "target": "https://hr.kenyaforestservice.org",
+      "url": "https://hr.kenyaforestservice.org",
+      "tags": [
+        "production",
+        "web"
+      ],
+      "description": "Kenya Forest Service HR portal.",
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "up",
+        "since": 1787732641830,
+        "lastCheck": 1787732641830,
+        "lastLatency": 1121,
+        "lastCode": 200,
+        "consecutiveFailures": 0
+      },
+      "recent": [
+        {
+          "t": 1787732055138,
+          "s": "degraded",
+          "ms": 5738
+        },
+        {
+          "t": 1787732641830,
+          "s": "up",
+          "ms": 1121,
+          "c": 200
+        }
+      ],
+      "daily": [
+        {
+          "d": "2026-08-26",
+          "n": 2,
+          "down": 0,
+          "deg": 1,
+          "sum": 6859,
+          "max": 5738
+        }
+      ],
+      "uptime": {
+        "day": 1,
+        "week": 1,
+        "month": 1,
+        "quarter": 1
+      },
+      "latency": {
+        "avg": 3430,
+        "p95": 5738,
+        "min": 1121,
+        "max": 5738
+      }
+    },
+    {
+      "id": "kimap",
+      "name": "KIMAP",
+      "kind": "http",
+      "target": "https://kimap.org",
+      "url": "https://kimap.org",
+      "tags": [
+        "production",
+        "web"
+      ],
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "up",
+        "since": 1787732028034,
+        "lastCheck": 1787732643841,
+        "lastLatency": 2413,
+        "lastCode": 200,
+        "consecutiveFailures": 0
+      },
+      "recent": [
+        {
+          "t": 1787732055138,
+          "s": "up",
+          "ms": 2303
+        },
+        {
+          "t": 1787732643841,
+          "s": "up",
+          "ms": 2413,
+          "c": 200
+        }
+      ],
+      "daily": [
+        {
+          "d": "2026-08-26",
+          "n": 2,
+          "down": 0,
+          "deg": 0,
+          "sum": 4716,
+          "max": 2413
+        }
+      ],
+      "uptime": {
+        "day": 1,
+        "week": 1,
+        "month": 1,
+        "quarter": 1
+      },
+      "latency": {
+        "avg": 2358,
+        "p95": 2413,
+        "min": 2303,
+        "max": 2413
+      }
+    },
+    {
+      "id": "protouch",
+      "name": "Protouch",
+      "kind": "http",
+      "target": "https://protouch.co.ke",
+      "url": "https://protouch.co.ke",
+      "tags": [
+        "production",
+        "web"
+      ],
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "degraded",
+        "since": 1787732029680,
+        "lastCheck": 1787732644526,
+        "lastLatency": 3807,
+        "lastCode": 200,
+        "consecutiveFailures": 0
+      },
+      "recent": [
+        {
+          "t": 1787732055138,
+          "s": "degraded",
+          "ms": 4279
+        },
+        {
+          "t": 1787732644526,
+          "s": "degraded",
+          "ms": 3807,
+          "c": 200
+        }
+      ],
+      "daily": [
+        {
+          "d": "2026-08-26",
+          "n": 2,
+          "down": 0,
+          "deg": 2,
+          "sum": 8086,
+          "max": 4279
+        }
+      ],
+      "uptime": {
+        "day": 1,
+        "week": 1,
+        "month": 1,
+        "quarter": 1
+      },
+      "latency": {
+        "avg": 4043,
+        "p95": 4279,
+        "min": 3807,
+        "max": 4279
+      }
+    },
+    {
+      "id": "kfc",
+      "name": "KFC",
+      "kind": "http",
+      "target": "https://kfc.ac.ke",
+      "url": "https://kfc.ac.ke",
+      "tags": [
+        "production",
+        "web"
+      ],
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "down",
+        "since": 1787732641678,
+        "lastCheck": 1787732641678,
+        "lastLatency": 8,
+        "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
+        "consecutiveFailures": 2
+      },
+      "recent": [
+        {
+          "t": 1787732055138,
+          "s": "down",
+          "ms": 330
+        },
+        {
+          "t": 1787732641678,
+          "s": "down",
+          "ms": 8,
+          "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+        }
+      ],
+      "daily": [
+        {
+          "d": "2026-08-26",
+          "n": 2,
+          "down": 2,
+          "deg": 0,
+          "sum": 338,
+          "max": 330
+        }
+      ],
+      "uptime": {
+        "day": 0,
+        "week": 0,
+        "month": 0,
+        "quarter": 0
+      },
+      "latency": {
+        "avg": null,
+        "p95": null,
+        "min": null,
+        "max": null
+      }
+    }
+  ],
+  "incidents": [
+    {
+      "id": "kfc-1787732641678",
+      "monitorId": "kfc",
+      "startedAt": 1787732641678,
+      "severity": "down",
+      "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+    },
+    {
+      "id": "protouch-1787732029680",
+      "monitorId": "protouch",
+      "startedAt": 1787732029680,
+      "severity": "degraded",
+      "reason": "Responded in 4279ms"
+    },
+    {
+      "id": "kfs-1787732031158",
+      "monitorId": "kfs",
+      "startedAt": 1787732031158,
+      "severity": "degraded",
+      "reason": "Responded in 5738ms",
+      "endedAt": 1787732641830
+    }
+  ],
+  "counts": {
+    "up": 3,
+    "degraded": 1,
+    "down": 1,
+    "paused": 0,
+    "pending": 0
+  }
+}

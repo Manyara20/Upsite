@@ -1,0 +1,31 @@
+[
+  {
+    "id": "kfc-1787732641678",
+    "monitorId": "kfc",
+    "startedAt": 1787732641678,
+    "severity": "down",
+    "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+  },
+  {
+    "id": "simba-1787732031159",
+    "monitorId": "simba",
+    "startedAt": 1787732031159,
+    "severity": "degraded",
+    "reason": "Responded in 5771ms"
+  },
+  {
+    "id": "protouch-1787732029680",
+    "monitorId": "protouch",
+    "startedAt": 1787732029680,
+    "severity": "degraded",
+    "reason": "Responded in 4279ms"
+  },
+  {
+    "id": "kfs-1787732031158",
+    "monitorId": "kfs",
+    "startedAt": 1787732031158,
+    "severity": "degraded",
+    "reason": "Responded in 5738ms",
+    "endedAt": 1787732641830
+  }
+]

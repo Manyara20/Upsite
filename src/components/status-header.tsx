@@ -1,10 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Activity, RefreshCw, WifiOff } from "lucide-react";
+import { Activity, Github, RefreshCw, TriangleAlert, WifiOff } from "lucide-react";
 import { StatusDot } from "./status-dot";
 import { cn, formatClock, STATUS_STYLE } from "@/lib/format";
+import { repoUrl, type Source } from "@/lib/source";
 import type { StatusSnapshot } from "@/lib/types";
+import type { Connection } from "@/hooks/use-status";
 
 /**
  * The masthead. The overall state is the hero — one number-sized statement,
@@ -19,12 +21,23 @@ const OVERALL_HEADLINE: Record<StatusSnapshot["overall"], string> = {
   pending: "Awaiting first checks",
 };
 
-function ConnectionPill({ connection }: { connection: "connecting" | "live" | "offline" }) {
+function ConnectionPill({ connection }: { connection: Connection }) {
   if (connection === "offline") {
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full border border-down/30 bg-down/10 px-2.5 py-1 text-[11px] text-down">
         <WifiOff className="h-3 w-3" />
-        Reconnecting
+        Cannot reach GitHub
+      </span>
+    );
+  }
+
+  // The workflow runs every five minutes. Data older than that means a run was
+  // skipped or is queued — worth saying, rather than presenting it as current.
+  if (connection === "stale") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-degraded/30 bg-degraded/10 px-2.5 py-1 text-[11px] text-degraded">
+        <TriangleAlert className="h-3 w-3" />
+        Data is behind
       </span>
     );
   }
@@ -49,7 +62,7 @@ function ConnectionPill({ connection }: { connection: "connecting" | "live" | "o
           )}
         />
       </span>
-      {connection === "live" ? "Live" : "Connecting"}
+      {connection === "live" ? "Up to date" : "Loading"}
     </span>
   );
 }
@@ -57,13 +70,15 @@ function ConnectionPill({ connection }: { connection: "connecting" | "live" | "o
 export function StatusHeader({
   snapshot,
   connection,
-  onCheckAll,
-  checking,
+  onRefresh,
+  refreshing,
+  source,
 }: {
   snapshot: StatusSnapshot;
-  connection: "connecting" | "live" | "offline";
-  onCheckAll: () => void;
-  checking: boolean;
+  connection: Connection;
+  onRefresh: () => void;
+  refreshing: boolean;
+  source: Source;
 }) {
   const style = STATUS_STYLE[snapshot.overall];
 
@@ -93,13 +108,22 @@ export function StatusHeader({
           <ConnectionPill connection={connection} />
           <button
             type="button"
-            onClick={onCheckAll}
-            disabled={checking}
+            onClick={onRefresh}
+            disabled={refreshing}
             className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-abyss px-3 py-1 text-[11px] text-ink-dim transition hover:border-signal/40 hover:text-signal disabled:opacity-50"
           >
-            <RefreshCw className={cn("h-3 w-3", checking && "animate-spin")} />
-            {checking ? "Checking…" : "Check all"}
+            <RefreshCw className={cn("h-3 w-3", refreshing && "animate-spin")} />
+            {refreshing ? "Refreshing…" : "Refresh"}
           </button>
+          <a
+            href={repoUrl(source)}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-1.5 rounded-full border border-edge bg-abyss px-3 py-1 text-[11px] text-ink-dim transition hover:border-signal/40 hover:text-signal"
+          >
+            <Github className="h-3 w-3" />
+            Source data
+          </a>
         </div>
       </div>
 
@@ -131,8 +155,8 @@ export function StatusHeader({
             </div>
             <p className="mt-2 text-sm text-ink-dim">
               Monitoring {snapshot.monitors.length} endpoint
-              {snapshot.monitors.length === 1 ? "" : "s"} · updated{" "}
-              <span className="font-mono">{formatClock(snapshot.generatedAt)}</span>
+              {snapshot.monitors.length === 1 ? "" : "s"} from GitHub Actions · last
+              check <span className="font-mono">{formatClock(snapshot.generatedAt)}</span>
             </p>
           </div>
 

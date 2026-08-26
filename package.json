@@ -2,13 +2,18 @@
   "name": "upsite",
   "version": "1.0.0",
   "private": true,
-  "description": "Futuristic, database-free uptime monitoring platform.",
+  "description": "Uptime monitoring on GitHub Actions, with git as the database and GitHub Pages as the status site.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "npx serve out",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "uptime": "tsx scripts/uptime.ts",
+    "response-time": "tsx scripts/response-time.ts",
+    "graphs": "tsx scripts/graphs.ts",
+    "summary": "tsx scripts/summary.ts",
+    "setup": "tsx scripts/setup.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -32,6 +37,7 @@
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "tsx": "^4.19.2"
   }
 }

@@ -1,0 +1,28 @@
+id: protouch
+name: Protouch
+target: https://protouch.co.ke
+status: degraded
+since: 2026-08-26T08:13:49.680Z
+lastUpdated: 2026-08-26T08:24:04.526Z
+consecutiveFailures: 0
+today:
+  d: 2026-08-26
+  n: 2
+  down: 0
+  deg: 2
+  sum: 8086
+  max: 4279
+window:
+  d: 2026-08-26T08:14:15.138Z
+  n: 1
+  down: 0
+  deg: 1
+  sum: 3807
+  max: 3807
+responseTime: 3807
+code: 200
+incident:
+  id: protouch-1787732029680
+  startedAt: 1787732029680
+  severity: degraded
+  reason: Responded in 4279ms

@@ -1,0 +1,65 @@
+{
+  "id": "protouch",
+  "name": "Protouch",
+  "kind": "http",
+  "target": "https://protouch.co.ke",
+  "url": "https://protouch.co.ke",
+  "tags": [
+    "production",
+    "web"
+  ],
+  "secure": false,
+  "intervalSeconds": 300,
+  "state": {
+    "status": "degraded",
+    "since": 1787732029680,
+    "lastCheck": 1787732644526,
+    "lastLatency": 3807,
+    "lastCode": 200,
+    "consecutiveFailures": 0
+  },
+  "recent": [
+    {
+      "t": 1787732055138,
+      "s": "degraded",
+      "ms": 4279
+    },
+    {
+      "t": 1787732644526,
+      "s": "degraded",
+      "ms": 3807,
+      "c": 200
+    }
+  ],
+  "daily": [
+    {
+      "d": "2026-08-26",
+      "n": 2,
+      "down": 0,
+      "deg": 2,
+      "sum": 8086,
+      "max": 4279
+    }
+  ],
+  "uptime": {
+    "day": 1,
+    "week": 1,
+    "month": 1,
+    "quarter": 1
+  },
+  "latency": {
+    "avg": 4043,
+    "p95": 4279,
+    "min": 3807,
+    "max": 4279
+  },
+  "incidents": [
+    {
+      "id": "protouch-1787732029680",
+      "monitorId": "protouch",
+      "startedAt": 1787732029680,
+      "severity": "degraded",
+      "reason": "Responded in 4279ms"
+    }
+  ]
+}

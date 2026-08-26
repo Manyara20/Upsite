@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Upsite">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020" />
+      <stop offset="100%" stop-color="#05070d" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)" />
+  <!-- The uptime trace: a heartbeat that ends on a healthy plateau. -->
+  <path d="M72 300 L152 300 L192 196 L248 372 L296 268 L336 268"
+        fill="none" stroke="#6366f1" stroke-width="26"
+        stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="392" cy="268" r="34" fill="#22c55e" />
+</svg>

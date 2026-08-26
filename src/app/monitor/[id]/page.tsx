@@ -1,29 +1,33 @@
 import { notFound } from "next/navigation";
-import { isUnlocked } from "@/lib/auth";
-import { getConfig } from "@/lib/config";
-import { ensureEngine } from "@/lib/engine";
-import { store } from "@/lib/store";
 import { MonitorDetail } from "@/components/monitor-detail";
+import { buildMonitor, buildSource, publicMonitorIds } from "@/lib/build-data";
+import { getConfig } from "@/lib/config";
 
-export const dynamic = "force-dynamic";
+/**
+ * One page per public monitor, baked at build time. Secure monitors get no
+ * route at all — there is no server here to authorise anyone against, so the
+ * only honest way to keep one off the site is not to publish it.
+ */
+export function generateStaticParams() {
+  return publicMonitorIds().map((id) => ({ id }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const monitor = getConfig().monitors.find((m) => m.id === id);
-  const visible = monitor && (!monitor.secure || (await isUnlocked()));
-  return { title: visible ? `${monitor.name} — Upsite` : "Not found — Upsite" };
+  const config = getConfig();
+  const monitor = config.monitors.find((m) => m.id === id && !m.secure);
+  return {
+    title: monitor ? `${monitor.name} — ${config.site.name}` : `Not found — ${config.site.name}`,
+  };
 }
 
 export default async function MonitorPage({ params }: { params: Promise<{ id: string }> }) {
-  await ensureEngine();
-
   const { id } = await params;
-  const monitor = getConfig().monitors.find((m) => m.id === id);
+  const config = getConfig();
+  const monitor = config.monitors.find((m) => m.id === id && !m.secure);
+  if (!monitor) notFound();
 
-  // Secure monitors are indistinguishable from missing ones until unlocked.
-  if (!monitor || (monitor.secure && !(await isUnlocked()))) notFound();
-
-  const incidents = store.getIncidents().filter((i) => i.monitorId === id);
-
-  return <MonitorDetail initial={store.snapshotOf(monitor)} incidents={incidents} />;
+  return (
+    <MonitorDetail initial={buildMonitor(id)} source={buildSource(config)} />
+  );
 }

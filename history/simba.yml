@@ -1,0 +1,28 @@
+id: simba
+name: Simba
+target: https://bitok.campaignhq.top
+status: degraded
+since: 2026-08-26T08:13:51.159Z
+lastUpdated: 2026-08-26T08:24:05.697Z
+consecutiveFailures: 0
+today:
+  d: 2026-08-26
+  n: 2
+  down: 0
+  deg: 2
+  sum: 10759
+  max: 5771
+window:
+  d: 2026-08-26T08:14:15.138Z
+  n: 1
+  down: 0
+  deg: 1
+  sum: 4988
+  max: 4988
+responseTime: 4988
+code: 200
+incident:
+  id: simba-1787732031159
+  startedAt: 1787732031159
+  severity: degraded
+  reason: Responded in 5771ms

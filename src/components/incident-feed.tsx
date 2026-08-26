@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ShieldAlert, TriangleAlert } from "lucide-react";
+import { CheckCircle2, MessageSquareText, ShieldAlert, TriangleAlert } from "lucide-react";
 import { cn, formatDateTime, formatDuration } from "@/lib/format";
 import type { Incident } from "@/lib/types";
 
@@ -82,6 +82,20 @@ export function IncidentFeed({
                 <p className="mt-0.5 truncate font-mono text-[11px] text-ink-dim">
                   {incident.reason}
                 </p>
+
+                {/* The full incident report lives in the GitHub issue: every
+                    update during the outage was posted there as a comment. */}
+                {incident.issueUrl && (
+                  <a
+                    href={incident.issueUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="mt-1.5 inline-flex items-center gap-1 text-[11px] text-ink-faint transition hover:text-signal"
+                  >
+                    <MessageSquareText className="h-3 w-3" />
+                    Incident report #{incident.issue}
+                  </a>
+                )}
               </div>
 
               <div className="shrink-0 text-right">

@@ -1,0 +1,76 @@
+name: Site
+
+# Builds the static status site and publishes it to GitHub Pages.
+#
+# The site reads live data from the GitHub API in the browser, so it does *not*
+# need rebuilding when a check lands — only when the code or the monitor list
+# changes. The nightly run exists to refresh the snapshot baked into the export
+# for the first paint (and for the offline cache).
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - public/**
+      - upsite.config.yaml
+      - next.config.ts
+      - package.json
+      - package-lock.json
+      - .github/workflows/site.yml
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A queued deploy should wait for the one in flight rather than cancel it —
+# cancelling mid-deploy can leave Pages serving a half-published site.
+concurrency:
+  group: upsite-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+        env:
+          # `configure-pages` knows whether this is a project site (served from
+          # /<repo>) or a user site or custom domain (served from the root).
+          # Trusting it here means a custom domain needs no config change.
+          UPSITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

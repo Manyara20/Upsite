@@ -55,9 +55,12 @@ export interface Incident {
   severity: Exclude<Health, "up">;
   /** the error or condition that tripped it */
   reason: string;
+  /** GitHub issue tracking this incident — the incident report lives there. */
+  issue?: number;
+  issueUrl?: string;
 }
 
-/** Live state for one monitor, held in memory and mirrored to disk. */
+/** Current state for one monitor, mirrored into `history/<id>.yml`. */
 export interface MonitorState {
   status: MonitorStatus;
   /** epoch millis the monitor entered its current status */
@@ -104,7 +107,9 @@ export interface MonitorSnapshot {
 }
 
 export interface StatusSnapshot {
-  site: { name: string; tagline?: string };
+  site: { name: string; tagline?: string; url?: string };
+  /** Lets the site link back to the repository the data came from. */
+  repository: { owner: string; name: string; branch: string };
   /** worst status across all non-paused monitors */
   overall: MonitorStatus;
   generatedAt: number;
@@ -113,8 +118,56 @@ export interface StatusSnapshot {
   counts: Record<MonitorStatus, number>;
 }
 
-/** Pushed over SSE whenever a check completes or a monitor changes status. */
-export type StreamEvent =
-  | { type: "check"; monitorId: string; result: CheckResult; state: MonitorState }
-  | { type: "transition"; monitorId: string; from: MonitorStatus; to: MonitorStatus; incident?: Incident }
-  | { type: "hello"; snapshot: StatusSnapshot };
+/**
+ * The per-monitor record committed to `history/<id>.yml` on every check. It is
+ * the only mutable state in the system: everything under `api/` is derived
+ * from these files and can be regenerated from scratch.
+ */
+export interface MonitorHistory {
+  id: string;
+  name: string;
+  /** URL or host:port — whatever was probed. */
+  target: string;
+  status: MonitorStatus;
+  /** ISO 8601, so a human reading the YAML in a diff can make sense of it. */
+  since: string;
+  lastUpdated: string;
+  responseTime?: number;
+  code?: number;
+  error?: string;
+  consecutiveFailures: number;
+  /** Today's accumulating rollup, sealed into `<id>.daily.json` at midnight. */
+  today: DayBucket;
+  /**
+   * Accumulates between response-time recordings and is drained by the
+   * 6-hourly workflow, so each committed sample is a true mean over ~72 checks
+   * rather than whichever single check happened to land on the hour. `d` is
+   * the ISO timestamp the window opened.
+   */
+  window: DayBucket;
+  /** Present only while an outage is open. */
+  incident?: {
+    id: string;
+    startedAt: number;
+    severity: Exclude<Health, "up">;
+    reason: string;
+    issue?: number;
+    issueUrl?: string;
+    /** epoch millis of the last follow-up comment, for the throttle. */
+    lastCommentAt?: number;
+    /** the reason at the time of that comment, so a change forces a new one */
+    lastCommentReason?: string;
+  };
+}
+
+/** One 6-hourly response-time sample, appended to `<id>.response-time.json`. */
+export type ResponseSample = CheckResult;
+
+/**
+ * What `api/<id>.json` holds: one monitor's full series plus its own incidents.
+ * Bundling the two means the detail page reads a single file and can never show
+ * a chart and an incident list that disagree about what happened.
+ */
+export interface MonitorReport extends MonitorSnapshot {
+  incidents: Incident[];
+}

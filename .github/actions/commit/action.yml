@@ -1,0 +1,60 @@
+name: Commit data
+description: >
+  Commits whatever the calling job left in the working tree and pushes it,
+  retrying if another workflow pushed first. This is the persistence step —
+  git is the database, so a lost push is lost data.
+
+inputs:
+  message:
+    description: Commit subject. "[skip ci]" is appended automatically.
+    required: true
+  attempts:
+    description: How many times to retry a rejected push.
+    required: false
+    default: "5"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        MESSAGE: ${{ inputs.message }}
+        ATTEMPTS: ${{ inputs.attempts }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "Nothing changed — no commit."
+          exit 0
+        fi
+
+        git config user.name "upsite[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git add -A
+        # [skip ci] keeps a data commit from triggering the site build; the
+        # site reads this data at runtime and does not need rebuilding for it.
+        git commit -m "${MESSAGE} [skip ci]"
+
+        branch="${GITHUB_REF_NAME}"
+        for attempt in $(seq 1 "$ATTEMPTS"); do
+          if git push origin "HEAD:${branch}"; then
+            echo "Pushed on attempt ${attempt}."
+            exit 0
+          fi
+
+          echo "Push rejected — rebasing onto origin/${branch} (attempt ${attempt})."
+          git fetch origin "$branch"
+          # In a rebase "theirs" is the commit being replayed — ours. A
+          # conflict here means two runs wrote the same data file, and the
+          # newer observation is the one worth keeping.
+          git rebase -X theirs "origin/${branch}" || {
+            git rebase --abort || true
+            echo "Rebase failed; giving up so the next run can start clean."
+            exit 1
+          }
+          sleep $(( (RANDOM % 5) + attempt ))
+        done
+
+        echo "Could not push after ${ATTEMPTS} attempts."
+        exit 1

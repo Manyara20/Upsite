@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Radio, RefreshCw } from "lucide-react";
+import { ArrowUpRight, Radio } from "lucide-react";
 import { Sparkline } from "./sparkline";
 import { StatusDot } from "./status-dot";
 import {
@@ -30,11 +30,9 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: str
 export function MonitorCard({
   monitor,
   index,
-  onRecheck,
 }: {
   monitor: MonitorSnapshot;
   index: number;
-  onRecheck: (id: string) => void;
 }) {
   const style = STATUS_STYLE[monitor.state.status];
   const { state } = monitor;
@@ -72,15 +70,6 @@ export function MonitorCard({
           </div>
 
           <div className="flex shrink-0 items-center gap-1">
-            <button
-              type="button"
-              onClick={() => onRecheck(monitor.id)}
-              aria-label={`Check ${monitor.name} now`}
-              title="Check now"
-              className="rounded-lg p-1.5 text-ink-faint opacity-0 transition hover:bg-edge hover:text-signal focus-visible:opacity-100 group-hover:opacity-100"
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-            </button>
             <Link
               href={`/monitor/${monitor.id}`}
               aria-label={`Open ${monitor.name} details`}
