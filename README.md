@@ -169,8 +169,14 @@ It is a PWA: installable, and readable offline from the last status you saw.
 ```bash
 npm install
 npm run dev            # http://localhost:3000
-npm run build          # static export into out/
+npm run preview        # build + serve the real export at http://localhost:3000
+npm run build          # the deploy build — honours site.basePath
 ```
+
+`dev` and `preview` force `UPSITE_BASE_PATH=` so the site is served from the
+root. `build` does not: a GitHub Pages project site lives under `/<repo>`, so
+that build prefixes every asset with `/Upsite`, and serving its `out/` from the
+root would 404 on all of them. Use `preview` to look at it locally.
 
 ## Running the workflows by hand
 

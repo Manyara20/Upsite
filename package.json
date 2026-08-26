@@ -4,9 +4,10 @@
   "private": true,
   "description": "Uptime monitoring on GitHub Actions, with git as the database and GitHub Pages as the status site.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "UPSITE_BASE_PATH= next dev",
     "build": "next build",
-    "start": "npx serve out",
+    "preview": "UPSITE_BASE_PATH= next build && npx serve out",
+    "start": "npm run preview",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "uptime": "tsx scripts/uptime.ts",
