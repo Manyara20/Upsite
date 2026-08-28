@@ -10,7 +10,7 @@
     "branch": "main"
   },
   "overall": "down",
-  "generatedAt": 1787918921529,
+  "generatedAt": 1787943263346,
   "monitors": [
     {
       "id": "kichaka",
@@ -27,8 +27,8 @@
       "state": {
         "status": "up",
         "since": 1787732027429,
-        "lastCheck": 1787898214206,
-        "lastLatency": 126,
+        "lastCheck": 1787943261519,
+        "lastLatency": 153,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -62,6 +62,12 @@
           "t": 1787913626373,
           "s": "up",
           "ms": 140
+        },
+        {
+          "t": 1787943261519,
+          "s": "up",
+          "ms": 153,
+          "c": 200
         }
       ],
       "daily": [
@@ -83,11 +89,11 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
+          "n": 2,
           "down": 0,
           "deg": 0,
-          "sum": 126,
-          "max": 126
+          "sum": 279,
+          "max": 153
         }
       ],
       "uptime": {
@@ -97,7 +103,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 522,
+        "avg": 469,
         "p95": 2136,
         "min": 110,
         "max": 2136
@@ -119,8 +125,8 @@
       "state": {
         "status": "up",
         "since": 1787732641830,
-        "lastCheck": 1787898217497,
-        "lastLatency": 529,
+        "lastCheck": 1787943263304,
+        "lastLatency": 483,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -154,6 +160,12 @@
           "t": 1787913626373,
           "s": "up",
           "ms": 546
+        },
+        {
+          "t": 1787943263304,
+          "s": "up",
+          "ms": 483,
+          "c": 200
         }
       ],
       "daily": [
@@ -175,10 +187,10 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
+          "n": 2,
           "down": 0,
           "deg": 0,
-          "sum": 529,
+          "sum": 1012,
           "max": 529
         }
       ],
@@ -189,9 +201,9 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 1484,
+        "avg": 1341,
         "p95": 5738,
-        "min": 484,
+        "min": 483,
         "max": 5738
       }
     },
@@ -210,8 +222,8 @@
       "state": {
         "status": "up",
         "since": 1787732028034,
-        "lastCheck": 1787898214309,
-        "lastLatency": 144,
+        "lastCheck": 1787943261413,
+        "lastLatency": 129,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -245,6 +257,12 @@
           "t": 1787913626373,
           "s": "up",
           "ms": 135
+        },
+        {
+          "t": 1787943261413,
+          "s": "up",
+          "ms": 129,
+          "c": 200
         }
       ],
       "daily": [
@@ -266,10 +284,10 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
+          "n": 2,
           "down": 0,
           "deg": 0,
-          "sum": 144,
+          "sum": 273,
           "max": 144
         }
       ],
@@ -280,7 +298,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 571,
+        "avg": 508,
         "p95": 2303,
         "min": 109,
         "max": 2303
@@ -301,8 +319,8 @@
       "state": {
         "status": "up",
         "since": 1787737328859,
-        "lastCheck": 1787898215528,
-        "lastLatency": 255,
+        "lastCheck": 1787943262583,
+        "lastLatency": 249,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -336,6 +354,12 @@
           "t": 1787913626373,
           "s": "up",
           "ms": 239
+        },
+        {
+          "t": 1787943262583,
+          "s": "up",
+          "ms": 249,
+          "c": 200
         }
       ],
       "daily": [
@@ -357,10 +381,10 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
+          "n": 2,
           "down": 0,
           "deg": 0,
-          "sum": 255,
+          "sum": 504,
           "max": 255
         }
       ],
@@ -371,7 +395,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 1021,
+        "avg": 910,
         "p95": 4279,
         "min": 239,
         "max": 4279
@@ -392,10 +416,10 @@
       "state": {
         "status": "down",
         "since": 1787732641678,
-        "lastCheck": 1787898216098,
-        "lastLatency": 781,
+        "lastCheck": 1787943263310,
+        "lastLatency": 836,
         "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
-        "consecutiveFailures": 18
+        "consecutiveFailures": 19
       },
       "recent": [
         {
@@ -427,6 +451,12 @@
           "t": 1787913626373,
           "s": "down",
           "ms": 816
+        },
+        {
+          "t": 1787943263310,
+          "s": "down",
+          "ms": 836,
+          "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
         }
       ],
       "daily": [
@@ -448,11 +478,11 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
-          "down": 1,
+          "n": 2,
+          "down": 2,
           "deg": 0,
-          "sum": 781,
-          "max": 781
+          "sum": 1617,
+          "max": 836
         }
       ],
       "uptime": {
@@ -483,8 +513,8 @@
       "state": {
         "status": "up",
         "since": 1787743047044,
-        "lastCheck": 1787898215285,
-        "lastLatency": 196,
+        "lastCheck": 1787943262379,
+        "lastLatency": 179,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -513,6 +543,12 @@
           "t": 1787913626373,
           "s": "up",
           "ms": 205
+        },
+        {
+          "t": 1787943262379,
+          "s": "up",
+          "ms": 179,
+          "c": 200
         }
       ],
       "daily": [
@@ -534,10 +570,10 @@
         },
         {
           "d": "2026-08-28",
-          "n": 1,
+          "n": 2,
           "down": 0,
           "deg": 0,
-          "sum": 196,
+          "sum": 375,
           "max": 196
         }
       ],
