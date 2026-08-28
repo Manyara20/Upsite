@@ -50,10 +50,9 @@
       "ms": 816
     },
     {
-      "t": 1787943263310,
+      "t": 1787954329383,
       "s": "down",
-      "ms": 836,
-      "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+      "ms": 836
     }
   ],
   "daily": [
