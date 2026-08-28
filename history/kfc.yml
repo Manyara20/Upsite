@@ -14,12 +14,12 @@ today:
   sum: 781
   max: 781
 window:
-  d: 2026-08-27T22:01:51.842Z
-  n: 2
-  down: 2
+  d: 2026-08-28T10:40:26.373Z
+  n: 0
+  down: 0
   deg: 0
-  sum: 1631
-  max: 850
+  sum: 0
+  max: 0
 responseTime: 781
 error: "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
 incident:
