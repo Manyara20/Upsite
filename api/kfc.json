@@ -13,10 +13,10 @@
   "state": {
     "status": "down",
     "since": 1787732641678,
-    "lastCheck": 1788013315298,
-    "lastLatency": 680,
+    "lastCheck": 1788025566355,
+    "lastLatency": 719,
     "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
-    "consecutiveFailures": 22
+    "consecutiveFailures": 23
   },
   "recent": [
     {
@@ -63,6 +63,12 @@
       "t": 1788020946635,
       "s": "down",
       "ms": 680
+    },
+    {
+      "t": 1788025566355,
+      "s": "down",
+      "ms": 719,
+      "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
     }
   ],
   "daily": [
@@ -92,11 +98,11 @@
     },
     {
       "d": "2026-08-29",
-      "n": 3,
-      "down": 3,
+      "n": 4,
+      "down": 4,
       "deg": 0,
-      "sum": 1958,
-      "max": 680
+      "sum": 2677,
+      "max": 719
     }
   ],
   "uptime": {
