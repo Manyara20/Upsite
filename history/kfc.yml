@@ -3,22 +3,22 @@ name: KFC
 target: https://kfc.ac.ke
 status: down
 since: 2026-08-26T08:24:01.678Z
-lastUpdated: 2026-08-29T08:57:15.235Z
-consecutiveFailures: 21
+lastUpdated: 2026-08-29T14:21:55.298Z
+consecutiveFailures: 22
 consecutiveDegraded: 0
 today:
   d: 2026-08-29
-  n: 2
-  down: 2
+  n: 3
+  down: 3
   deg: 0
-  sum: 1278
+  sum: 1958
   max: 680
 window:
   d: 2026-08-29T06:27:59.124Z
-  n: 1
-  down: 1
+  n: 2
+  down: 2
   deg: 0
-  sum: 680
+  sum: 1360
   max: 680
 responseTime: 680
 error: "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"

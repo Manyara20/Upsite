@@ -1,24 +1,33 @@
 id: kfs
 name: KFS
 target: https://hr.kenyaforestservice.org
-status: up
-since: 2026-08-26T08:24:01.830Z
-lastUpdated: 2026-08-29T08:57:33.321Z
-consecutiveFailures: 1
+status: down
+since: 2026-08-29T14:22:13.408Z
+lastUpdated: 2026-08-29T14:22:13.408Z
+consecutiveFailures: 2
 consecutiveDegraded: 0
 today:
   d: 2026-08-29
-  n: 2
-  down: 1
+  n: 3
+  down: 2
   deg: 0
-  sum: 10385
+  sum: 20385
   max: 10001
 window:
   d: 2026-08-29T06:27:59.124Z
-  n: 1
-  down: 1
+  n: 2
+  down: 2
   deg: 0
-  sum: 10001
+  sum: 20001
   max: 10001
-responseTime: 10001
+responseTime: 10000
 error: Timed out after 10000ms
+incident:
+  id: kfs-1788013333408
+  startedAt: 1788013333408
+  severity: down
+  reason: Timed out after 10000ms
+  issue: 1
+  issueUrl: https://github.com/Manyara20/Upsite/issues/1
+  lastCommentAt: 1788013333408
+  lastCommentReason: Timed out after 10000ms
