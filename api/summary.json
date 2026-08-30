@@ -10,7 +10,7 @@
     "branch": "main"
   },
   "overall": "down",
-  "generatedAt": 1788069232860,
+  "generatedAt": 1788088348941,
   "monitors": [
     {
       "id": "kichaka",
@@ -27,8 +27,8 @@
       "state": {
         "status": "up",
         "since": 1787732027429,
-        "lastCheck": 1788069211967,
-        "lastLatency": 176,
+        "lastCheck": 1788088328264,
+        "lastLatency": 155,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -89,9 +89,9 @@
           "ms": 153
         },
         {
-          "t": 1788069211967,
+          "t": 1788088328264,
           "s": "up",
-          "ms": 176,
+          "ms": 155,
           "c": 200
         }
       ],
@@ -130,10 +130,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
+          "n": 3,
           "down": 0,
           "deg": 0,
-          "sum": 339,
+          "sum": 494,
           "max": 176
         }
       ],
@@ -144,7 +144,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 335,
+        "avg": 334,
         "p95": 2136,
         "min": 101,
         "max": 2136
@@ -166,10 +166,10 @@
       "state": {
         "status": "down",
         "since": 1788013333408,
-        "lastCheck": 1788069231358,
+        "lastCheck": 1788088347607,
         "lastLatency": 10001,
         "lastError": "Timed out after 10000ms",
-        "consecutiveFailures": 7
+        "consecutiveFailures": 8
       },
       "recent": [
         {
@@ -228,7 +228,7 @@
           "ms": 10001
         },
         {
-          "t": 1788069231358,
+          "t": 1788088347607,
           "s": "down",
           "ms": 10001,
           "e": "Timed out after 10000ms"
@@ -269,18 +269,18 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
-          "down": 2,
+          "n": 3,
+          "down": 3,
           "deg": 0,
-          "sum": 20001,
+          "sum": 30002,
           "max": 10001
         }
       ],
       "uptime": {
         "day": 0,
-        "week": 0.7407407407407407,
-        "month": 0.7407407407407407,
-        "quarter": 0.7407407407407407
+        "week": 0.7142857142857143,
+        "month": 0.7142857142857143,
+        "quarter": 0.7142857142857143
       },
       "latency": {
         "avg": 1221,
@@ -304,8 +304,8 @@
       "state": {
         "status": "up",
         "since": 1787732028034,
-        "lastCheck": 1788069211823,
-        "lastLatency": 106,
+        "lastCheck": 1788088328127,
+        "lastLatency": 117,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -366,9 +366,9 @@
           "ms": 143
         },
         {
-          "t": 1788069211823,
+          "t": 1788088328127,
           "s": "up",
-          "ms": 106,
+          "ms": 117,
           "c": 200
         }
       ],
@@ -407,10 +407,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
+          "n": 3,
           "down": 0,
           "deg": 0,
-          "sum": 266,
+          "sum": 383,
           "max": 160
         }
       ],
@@ -421,9 +421,9 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 356,
+        "avg": 357,
         "p95": 2303,
-        "min": 106,
+        "min": 109,
         "max": 2303
       }
     },
@@ -442,8 +442,8 @@
       "state": {
         "status": "up",
         "since": 1787737328859,
-        "lastCheck": 1788069213169,
-        "lastLatency": 292,
+        "lastCheck": 1788088329398,
+        "lastLatency": 342,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -504,9 +504,9 @@
           "ms": 321
         },
         {
-          "t": 1788069213169,
+          "t": 1788088329398,
           "s": "up",
-          "ms": 292,
+          "ms": 342,
           "c": 200
         }
       ],
@@ -545,11 +545,11 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
+          "n": 3,
           "down": 0,
           "deg": 0,
-          "sum": 539,
-          "max": 292
+          "sum": 881,
+          "max": 342
         }
       ],
       "uptime": {
@@ -559,7 +559,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 651,
+        "avg": 655,
         "p95": 4279,
         "min": 239,
         "max": 4279
@@ -580,10 +580,10 @@
       "state": {
         "status": "down",
         "since": 1787732641678,
-        "lastCheck": 1788069213946,
-        "lastLatency": 868,
+        "lastCheck": 1788088330151,
+        "lastLatency": 821,
         "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
-        "consecutiveFailures": 27
+        "consecutiveFailures": 28
       },
       "recent": [
         {
@@ -642,9 +642,9 @@
           "ms": 835
         },
         {
-          "t": 1788069213946,
+          "t": 1788088330151,
           "s": "down",
-          "ms": 868,
+          "ms": 821,
           "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
         }
       ],
@@ -683,10 +683,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
-          "down": 2,
+          "n": 3,
+          "down": 3,
           "deg": 0,
-          "sum": 1643,
+          "sum": 2464,
           "max": 868
         }
       ],
@@ -718,8 +718,8 @@
       "state": {
         "status": "up",
         "since": 1787743047044,
-        "lastCheck": 1788069213330,
-        "lastLatency": 261,
+        "lastCheck": 1788088329335,
+        "lastLatency": 215,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -775,9 +775,9 @@
           "ms": 199
         },
         {
-          "t": 1788069213330,
+          "t": 1788088329335,
           "s": "up",
-          "ms": 261,
+          "ms": 215,
           "c": 200
         }
       ],
@@ -816,10 +816,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 2,
+          "n": 3,
           "down": 0,
           "deg": 0,
-          "sum": 412,
+          "sum": 627,
           "max": 261
         }
       ],
@@ -830,10 +830,10 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 188,
-        "p95": 261,
+        "avg": 184,
+        "p95": 215,
         "min": 153,
-        "max": 261
+        "max": 215
       }
     }
   ],
