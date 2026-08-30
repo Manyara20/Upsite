@@ -10,7 +10,7 @@
     "branch": "main"
   },
   "overall": "down",
-  "generatedAt": 1788122897592,
+  "generatedAt": 1788125815409,
   "monitors": [
     {
       "id": "kichaka",
@@ -27,8 +27,8 @@
       "state": {
         "status": "up",
         "since": 1787732027429,
-        "lastCheck": 1788115261382,
-        "lastLatency": 138,
+        "lastCheck": 1788125794454,
+        "lastLatency": 150,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -102,6 +102,12 @@
           "t": 1788122897558,
           "s": "up",
           "ms": 138
+        },
+        {
+          "t": 1788125794454,
+          "s": "up",
+          "ms": 150,
+          "c": 200
         }
       ],
       "daily": [
@@ -139,10 +145,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
+          "n": 6,
           "down": 0,
           "deg": 0,
-          "sum": 740,
+          "sum": 890,
           "max": 176
         }
       ],
@@ -153,7 +159,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 304,
+        "avg": 294,
         "p95": 2136,
         "min": 101,
         "max": 2136
@@ -175,10 +181,10 @@
       "state": {
         "status": "down",
         "since": 1788013333408,
-        "lastCheck": 1788115280703,
+        "lastCheck": 1788125813845,
         "lastLatency": 10001,
         "lastError": "Timed out after 10000ms",
-        "consecutiveFailures": 10
+        "consecutiveFailures": 11
       },
       "recent": [
         {
@@ -250,6 +256,12 @@
           "t": 1788122897558,
           "s": "down",
           "ms": 10001
+        },
+        {
+          "t": 1788125813845,
+          "s": "down",
+          "ms": 10001,
+          "e": "Timed out after 10000ms"
         }
       ],
       "daily": [
@@ -287,18 +299,18 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
-          "down": 5,
+          "n": 6,
+          "down": 6,
           "deg": 0,
-          "sum": 50004,
+          "sum": 60005,
           "max": 10001
         }
       ],
       "uptime": {
         "day": 0,
-        "week": 0.6666666666666666,
-        "month": 0.6666666666666666,
-        "quarter": 0.6666666666666666
+        "week": 0.6451612903225806,
+        "month": 0.6451612903225806,
+        "quarter": 0.6451612903225806
       },
       "latency": {
         "avg": 1221,
@@ -322,8 +334,8 @@
       "state": {
         "status": "up",
         "since": 1787732028034,
-        "lastCheck": 1788115261395,
-        "lastLatency": 160,
+        "lastCheck": 1788125794460,
+        "lastLatency": 172,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -397,6 +409,12 @@
           "t": 1788122897558,
           "s": "up",
           "ms": 160
+        },
+        {
+          "t": 1788125794460,
+          "s": "up",
+          "ms": 172,
+          "c": 200
         }
       ],
       "daily": [
@@ -434,10 +452,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
+          "n": 6,
           "down": 0,
           "deg": 0,
-          "sum": 748,
+          "sum": 920,
           "max": 205
         }
       ],
@@ -448,7 +466,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 332,
+        "avg": 321,
         "p95": 2303,
         "min": 109,
         "max": 2303
@@ -469,8 +487,8 @@
       "state": {
         "status": "up",
         "since": 1787737328859,
-        "lastCheck": 1788115263307,
-        "lastLatency": 326,
+        "lastCheck": 1788125795548,
+        "lastLatency": 261,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -544,6 +562,12 @@
           "t": 1788122897558,
           "s": "up",
           "ms": 326
+        },
+        {
+          "t": 1788125795548,
+          "s": "up",
+          "ms": 261,
+          "c": 200
         }
       ],
       "daily": [
@@ -581,10 +605,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
+          "n": 6,
           "down": 0,
           "deg": 0,
-          "sum": 1396,
+          "sum": 1657,
           "max": 342
         }
       ],
@@ -595,7 +619,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 596,
+        "avg": 574,
         "p95": 4279,
         "min": 189,
         "max": 4279
@@ -616,10 +640,10 @@
       "state": {
         "status": "down",
         "since": 1787732641678,
-        "lastCheck": 1788115266841,
-        "lastLatency": 4506,
+        "lastCheck": 1788125796495,
+        "lastLatency": 863,
         "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
-        "consecutiveFailures": 30
+        "consecutiveFailures": 31
       },
       "recent": [
         {
@@ -691,6 +715,12 @@
           "t": 1788122897558,
           "s": "down",
           "ms": 4506
+        },
+        {
+          "t": 1788125796495,
+          "s": "down",
+          "ms": 863,
+          "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
         }
       ],
       "daily": [
@@ -728,10 +758,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
-          "down": 5,
+          "n": 6,
+          "down": 6,
           "deg": 0,
-          "sum": 7672,
+          "sum": 8535,
           "max": 4506
         }
       ],
@@ -763,8 +793,8 @@
       "state": {
         "status": "up",
         "since": 1787743047044,
-        "lastCheck": 1788115262922,
-        "lastLatency": 242,
+        "lastCheck": 1788125795777,
+        "lastLatency": 205,
         "lastCode": 200,
         "consecutiveFailures": 0
       },
@@ -833,6 +863,12 @@
           "t": 1788122897558,
           "s": "up",
           "ms": 242
+        },
+        {
+          "t": 1788125795777,
+          "s": "up",
+          "ms": 205,
+          "c": 200
         }
       ],
       "daily": [
@@ -870,10 +906,10 @@
         },
         {
           "d": "2026-08-30",
-          "n": 5,
+          "n": 6,
           "down": 0,
           "deg": 0,
-          "sum": 1018,
+          "sum": 1223,
           "max": 261
         }
       ],
@@ -884,7 +920,7 @@
         "quarter": 1
       },
       "latency": {
-        "avg": 187,
+        "avg": 189,
         "p95": 242,
         "min": 149,
         "max": 242
