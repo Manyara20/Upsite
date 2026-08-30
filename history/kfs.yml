@@ -14,12 +14,12 @@ today:
   sum: 30002
   max: 10001
 window:
-  d: 2026-08-30T04:38:59.575Z
-  n: 2
-  down: 2
+  d: 2026-08-30T11:35:48.309Z
+  n: 0
+  down: 0
   deg: 0
-  sum: 20002
-  max: 10001
+  sum: 0
+  max: 0
 responseTime: 10001
 error: Timed out after 10000ms
 incident:
