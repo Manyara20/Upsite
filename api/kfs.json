@@ -12,12 +12,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "down",
-    "since": 1788013333408,
-    "lastCheck": 1788142962364,
-    "lastLatency": 10000,
-    "lastError": "Timed out after 10000ms",
-    "consecutiveFailures": 13
+    "status": "up",
+    "since": 1788166043626,
+    "lastCheck": 1788166043626,
+    "lastLatency": 664,
+    "lastCode": 200,
+    "consecutiveFailures": 0
   },
   "recent": [
     {
@@ -94,6 +94,12 @@
       "t": 1788151376685,
       "s": "down",
       "ms": 10001
+    },
+    {
+      "t": 1788166043626,
+      "s": "up",
+      "ms": 664,
+      "c": 200
     }
   ],
   "daily": [
@@ -139,21 +145,21 @@
     },
     {
       "d": "2026-08-31",
-      "n": 1,
+      "n": 2,
       "down": 1,
       "deg": 0,
-      "sum": 10000,
+      "sum": 10664,
       "max": 10000
     }
   ],
   "uptime": {
-    "day": 0,
-    "week": 0.6060606060606061,
-    "month": 0.6060606060606061,
-    "quarter": 0.6060606060606061
+    "day": 0.5,
+    "week": 0.6176470588235294,
+    "month": 0.6176470588235294,
+    "quarter": 0.6176470588235294
   },
   "latency": {
-    "avg": 1221,
+    "avg": 1159,
     "p95": 5738,
     "min": 384,
     "max": 5738
@@ -166,7 +172,8 @@
       "severity": "down",
       "reason": "Timed out after 10000ms",
       "issue": 1,
-      "issueUrl": "https://github.com/Manyara20/Upsite/issues/1"
+      "issueUrl": "https://github.com/Manyara20/Upsite/issues/1",
+      "endedAt": 1788166043626
     },
     {
       "id": "kfs-1787732031158",
