@@ -11,12 +11,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "down",
-    "since": 1787732641678,
-    "lastCheck": 1788241512662,
-    "lastLatency": 1150,
-    "lastError": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
-    "consecutiveFailures": 38
+    "status": "up",
+    "since": 1788258690249,
+    "lastCheck": 1788258690249,
+    "lastLatency": 487,
+    "lastCode": 200,
+    "consecutiveFailures": 0
   },
   "recent": [
     {
@@ -110,10 +110,10 @@
       "ms": 866
     },
     {
-      "t": 1788241512662,
-      "s": "down",
-      "ms": 1150,
-      "e": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+      "t": 1788258690249,
+      "s": "up",
+      "ms": 487,
+      "c": 200
     }
   ],
   "daily": [
@@ -167,24 +167,24 @@
     },
     {
       "d": "2026-09-01",
-      "n": 2,
+      "n": 3,
       "down": 2,
       "deg": 0,
-      "sum": 2016,
+      "sum": 2503,
       "max": 1150
     }
   ],
   "uptime": {
-    "day": 0,
-    "week": 0,
-    "month": 0,
-    "quarter": 0
+    "day": 0.3333333333333333,
+    "week": 0.02564102564102564,
+    "month": 0.02564102564102564,
+    "quarter": 0.02564102564102564
   },
   "latency": {
-    "avg": null,
-    "p95": null,
-    "min": null,
-    "max": null
+    "avg": 487,
+    "p95": 487,
+    "min": 487,
+    "max": 487
   },
   "incidents": [
     {
@@ -192,7 +192,8 @@
       "monitorId": "kfc",
       "startedAt": 1787732641678,
       "severity": "down",
-      "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+      "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
+      "endedAt": 1788258690249
     }
   ]
 }

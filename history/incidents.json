@@ -14,7 +14,8 @@
     "monitorId": "kfc",
     "startedAt": 1787732641678,
     "severity": "down",
-    "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke"
+    "reason": "ENOTFOUND: getaddrinfo ENOTFOUND kfc.ac.ke",
+    "endedAt": 1788258690249
   },
   {
     "id": "simba-1787732031159",
