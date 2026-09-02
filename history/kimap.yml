@@ -3,22 +3,22 @@ name: KIMAP
 target: https://kimap.org
 status: up
 since: 2026-08-26T08:13:48.034Z
-lastUpdated: 2026-09-02T05:52:42.116Z
+lastUpdated: 2026-09-02T10:26:49.060Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-09-02
-  n: 2
+  n: 3
   down: 0
   deg: 0
-  sum: 272
+  sum: 381
   max: 168
 window:
   d: 2026-09-02T03:46:44.686Z
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 168
+  sum: 277
   max: 168
-responseTime: 168
+responseTime: 109
 code: 200
