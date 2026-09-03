@@ -3,22 +3,22 @@ name: KFC
 target: https://kfc.ac.ke
 status: up
 since: 2026-09-01T10:31:30.249Z
-lastUpdated: 2026-09-03T20:57:54.559Z
+lastUpdated: 2026-09-03T23:12:21.334Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-09-03
-  n: 6
+  n: 7
   down: 0
   deg: 0
-  sum: 2842
+  sum: 3270
   max: 502
 window:
   d: 2026-09-03T20:45:21.803Z
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 443
+  sum: 871
   max: 443
-responseTime: 443
+responseTime: 428
 code: 200
