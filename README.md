@@ -11,14 +11,14 @@ product, git is the database — with a Next.js status site in place of Sapper.
 
 | Monitor | Status | Response | 24h | 7d | 30d | 90d | Graph |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 🟩 [Kichaka](https://kichaka.top) | up | 162 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
-| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 504 ms | 100.00% | 69.05% | 78.69% | 78.69% | [graph](./graphs/kfs.svg) |
-| 🟩 [KIMAP](https://kimap.org) | up | 130 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
-| 🟩 [Protouch](https://protouch.co.ke) | up | 280 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
-| 🟩 [KFC](https://kfc.ac.ke) | up | 469 ms | 100.00% | 54.76% | 37.70% | 37.70% | [graph](./graphs/kfc.svg) |
-| 🟩 [CampaignHQ](https://campaignhq.top) | up | 258 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
+| 🟩 [Kichaka](https://kichaka.top) | up | 102 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
+| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 393 ms | 100.00% | 69.77% | 79.03% | 79.03% | [graph](./graphs/kfs.svg) |
+| 🟩 [KIMAP](https://kimap.org) | up | 214 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
+| 🟩 [Protouch](https://protouch.co.ke) | up | 206 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
+| 🟩 [KFC](https://kfc.ac.ke) | up | 1312 ms | 100.00% | 55.81% | 38.71% | 38.71% | [graph](./graphs/kfc.svg) |
+| 🟩 [CampaignHQ](https://campaignhq.top) | up | 134 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
 
-_Updated 2026-09-04 14:14 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-09-04 17:38 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
