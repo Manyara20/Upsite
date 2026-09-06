@@ -3,22 +3,22 @@ name: KFS
 target: https://hr.kenyaforestservice.org
 status: up
 since: 2026-08-31T08:47:23.626Z
-lastUpdated: 2026-09-06T04:56:52.878Z
+lastUpdated: 2026-09-06T09:14:40.175Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-09-06
-  n: 2
+  n: 3
   down: 0
   deg: 0
-  sum: 1023
+  sum: 1507
   max: 545
 window:
   d: 2026-09-06T03:49:12.541Z
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 545
+  sum: 1029
   max: 545
-responseTime: 545
+responseTime: 484
 code: 200
