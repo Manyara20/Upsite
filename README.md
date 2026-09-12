@@ -18,7 +18,7 @@ product, git is the database — with a Next.js status site in place of Sapper.
 | 🟩 [KFC](https://kfc.ac.ke) | up | 470 ms | 100.00% | 100.00% | 67.52% | 67.52% | [graph](./graphs/kfc.svg) |
 | 🟩 [CampaignHQ](https://campaignhq.top) | up | 150 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
 
-_Updated 2026-09-12 04:49 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-09-12 04:57 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
