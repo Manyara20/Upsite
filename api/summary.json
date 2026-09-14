@@ -9,8 +9,8 @@
     "name": "Upsite",
     "branch": "main"
   },
-  "overall": "up",
-  "generatedAt": 1789425246441,
+  "overall": "pending",
+  "generatedAt": 1789430243008,
   "monitors": [
     {
       "id": "kichaka",
@@ -3355,6 +3355,39 @@
         "min": 127,
         "max": 330
       }
+    },
+    {
+      "id": "cecebeauty",
+      "name": "Cece Beauty",
+      "kind": "http",
+      "target": "https://cecebeauty.co.ke",
+      "url": "https://cecebeauty.co.ke",
+      "tags": [
+        "prod",
+        "web"
+      ],
+      "secure": false,
+      "intervalSeconds": 300,
+      "state": {
+        "status": "pending",
+        "since": 1789430241972,
+        "lastCheck": 1789430241972,
+        "consecutiveFailures": 0
+      },
+      "recent": [],
+      "daily": [],
+      "uptime": {
+        "day": null,
+        "week": null,
+        "month": null,
+        "quarter": null
+      },
+      "latency": {
+        "avg": null,
+        "p95": null,
+        "min": null,
+        "max": null
+      }
     }
   ],
   "incidents": [
@@ -3398,6 +3431,6 @@
     "degraded": 0,
     "down": 0,
     "paused": 0,
-    "pending": 0
+    "pending": 1
   }
 }
