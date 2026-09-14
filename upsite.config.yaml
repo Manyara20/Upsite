@@ -99,6 +99,11 @@ monitors:
     url: https://campaignhq.top
     tags: [prod, live]
 
+  - id: cecebeauty
+    name: Cece Beauty
+    url: https://cecebeauty.co.ke
+    tags: [prod, web]
+
   # Protected. Checked and alerted on exactly like the others, but published
   # only into api/secure.json, which is AES-GCM ciphertext sealed with the
   # UPSITE_SECURE_KEY repository secret. The protected tab asks for that key
