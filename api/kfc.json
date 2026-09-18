@@ -11,12 +11,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "up",
-    "since": 1789664828706,
-    "lastCheck": 1789710806062,
+    "status": "down",
+    "since": 1789727341850,
+    "lastCheck": 1789727341850,
     "lastLatency": 10001,
     "lastError": "Timed out after 10000ms",
-    "consecutiveFailures": 1
+    "consecutiveFailures": 2
   },
   "recent": [
     {
@@ -440,8 +440,8 @@
       "ms": 405
     },
     {
-      "t": 1789710806062,
-      "s": "up",
+      "t": 1789727341850,
+      "s": "down",
       "ms": 10001,
       "e": "Timed out after 10000ms"
     }
@@ -633,26 +633,35 @@
     },
     {
       "d": "2026-09-18",
-      "n": 2,
-      "down": 1,
+      "n": 3,
+      "down": 2,
       "deg": 0,
-      "sum": 10406,
+      "sum": 20407,
       "max": 10001
     }
   ],
   "uptime": {
-    "day": 0.5,
-    "week": 0.9285714285714286,
-    "month": 0.7388535031847133,
-    "quarter": 0.7388535031847133
+    "day": 0.3333333333333333,
+    "week": 0.9069767441860465,
+    "month": 0.7341772151898734,
+    "quarter": 0.7341772151898734
   },
   "latency": {
-    "avg": 672,
-    "p95": 925,
+    "avg": 524,
+    "p95": 924,
     "min": 375,
-    "max": 10001
+    "max": 1570
   },
   "incidents": [
+    {
+      "id": "kfc-1789727341850",
+      "monitorId": "kfc",
+      "startedAt": 1789727341850,
+      "severity": "down",
+      "reason": "Timed out after 10000ms",
+      "issue": 3,
+      "issueUrl": "https://github.com/Manyara20/Upsite/issues/3"
+    },
     {
       "id": "kfc-1789647272411",
       "monitorId": "kfc",
