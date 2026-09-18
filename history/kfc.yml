@@ -3,22 +3,22 @@ name: KFC
 target: https://kfc.ac.ke
 status: up
 since: 2026-09-17T17:07:08.706Z
-lastUpdated: 2026-09-18T01:05:15.356Z
-consecutiveFailures: 0
+lastUpdated: 2026-09-18T05:53:26.062Z
+consecutiveFailures: 1
 consecutiveDegraded: 0
 today:
   d: 2026-09-18
-  n: 1
-  down: 0
+  n: 2
+  down: 1
   deg: 0
-  sum: 405
-  max: 405
+  sum: 10406
+  max: 10001
 window:
   d: 2026-09-18T03:59:05.259Z
-  n: 0
-  down: 0
+  n: 1
+  down: 1
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 405
-code: 200
+  sum: 10001
+  max: 10001
+responseTime: 10001
+error: Timed out after 10000ms
