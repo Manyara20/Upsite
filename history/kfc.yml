@@ -14,11 +14,11 @@ today:
   sum: 365
   max: 365
 window:
-  d: 2026-09-20T20:33:23.181Z
-  n: 3
+  d: 2026-09-21T04:11:56.560Z
+  n: 0
   down: 0
-  deg: 1
-  sum: 5167
-  max: 4419
+  deg: 0
+  sum: 0
+  max: 0
 responseTime: 365
 code: 200
