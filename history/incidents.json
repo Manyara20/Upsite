@@ -1,5 +1,14 @@
 [
   {
+    "id": "kfc-1790120267099",
+    "monitorId": "kfc",
+    "startedAt": 1790120267099,
+    "severity": "down",
+    "reason": "Timed out after 10000ms",
+    "issue": 4,
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/4"
+  },
+  {
     "id": "kfc-1789727341850",
     "monitorId": "kfc",
     "startedAt": 1789727341850,
