@@ -3,22 +3,22 @@ name: KFC
 target: https://kfc.ac.ke
 status: down
 since: 2026-09-22T23:37:47.099Z
-lastUpdated: 2026-09-22T23:37:47.099Z
-consecutiveFailures: 2
+lastUpdated: 2026-09-23T01:47:57.792Z
+consecutiveFailures: 3
 consecutiveDegraded: 0
 today:
-  d: 2026-09-22
-  n: 6
-  down: 2
+  d: 2026-09-23
+  n: 1
+  down: 1
   deg: 0
-  sum: 21782
-  max: 10001
+  sum: 10000
+  max: 10000
 window:
   d: 2026-09-22T21:03:55.096Z
-  n: 2
-  down: 2
+  n: 3
+  down: 3
   deg: 0
-  sum: 20001
+  sum: 30001
   max: 10001
 responseTime: 10000
 error: Timed out after 10000ms
@@ -29,5 +29,5 @@ incident:
   reason: Timed out after 10000ms
   issue: 4
   issueUrl: https://github.com/Manyara20/Upsite/issues/4
-  lastCommentAt: 1790120267099
+  lastCommentAt: 1790128077792
   lastCommentReason: Timed out after 10000ms
