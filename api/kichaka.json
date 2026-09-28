@@ -13,8 +13,8 @@
   "state": {
     "status": "up",
     "since": 1787732027429,
-    "lastCheck": 1790546860097,
-    "lastLatency": 102,
+    "lastCheck": 1790556208129,
+    "lastLatency": 106,
     "lastCode": 200,
     "consecutiveFailures": 0
   },
@@ -630,9 +630,9 @@
       "ms": 156
     },
     {
-      "t": 1790546860097,
+      "t": 1790556208129,
       "s": "up",
-      "ms": 102,
+      "ms": 106,
       "c": 200
     }
   ],
@@ -900,6 +900,14 @@
       "deg": 0,
       "sum": 834,
       "max": 165
+    },
+    {
+      "d": "2026-09-28",
+      "n": 1,
+      "down": 0,
+      "deg": 0,
+      "sum": 106,
+      "max": 106
     }
   ],
   "uptime": {
