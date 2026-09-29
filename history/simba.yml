@@ -3,22 +3,22 @@ name: Simba 2027
 target: https://bitok.campaignhq.top
 status: up
 since: 2026-08-26T09:42:08.880Z
-lastUpdated: 2026-09-29T00:23:02.113Z
+lastUpdated: 2026-09-29T05:58:33.732Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-09-29
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 369
+  sum: 663
   max: 369
 window:
   d: 2026-09-29T05:04:35.750Z
-  n: 0
+  n: 1
   down: 0
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 369
+  sum: 294
+  max: 294
+responseTime: 294
 code: 200
