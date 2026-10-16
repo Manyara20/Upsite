@@ -14,11 +14,11 @@ today:
   sum: 964
   max: 509
 window:
-  d: 2026-10-16T03:53:55.643Z
-  n: 1
+  d: 2026-10-16T11:02:08.657Z
+  n: 0
   down: 0
   deg: 0
-  sum: 509
-  max: 509
+  sum: 0
+  max: 0
 responseTime: 509
 code: 200
