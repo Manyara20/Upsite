@@ -3,22 +3,22 @@ name: Kichaka
 target: https://kichaka.top
 status: up
 since: 2026-08-26T08:13:47.429Z
-lastUpdated: 2026-10-17T20:58:38.968Z
+lastUpdated: 2026-10-17T23:00:44.176Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-10-17
-  n: 7
+  n: 8
   down: 0
   deg: 0
-  sum: 985
+  sum: 1144
   max: 246
 window:
   d: 2026-10-17T20:21:05.800Z
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 146
-  max: 146
-responseTime: 146
+  sum: 305
+  max: 159
+responseTime: 159
 code: 200
