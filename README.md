@@ -11,15 +11,15 @@ product, git is the database — with a Next.js status site in place of Sapper.
 
 | Monitor | Status | Response | 24h | 7d | 30d | 90d | Graph |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 🟩 [Kichaka](https://kichaka.top) | up | 117 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
-| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 390 ms | 100.00% | 100.00% | 99.39% | 95.80% | [graph](./graphs/kfs.svg) |
-| 🟩 [KIMAP](https://kimap.org) | up | 152 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
-| 🟩 [Protouch](https://protouch.co.ke) | up | 167 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
-| 🟩 [KFC](https://kfc.ac.ke) | up | 475 ms | 100.00% | 100.00% | 94.48% | 84.38% | [graph](./graphs/kfc.svg) |
-| 🟩 [CampaignHQ](https://campaignhq.top) | up | 140 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
-| 🟩 [Cece Beauty](https://cecebeauty.co.ke) | up | 45 ms | 100.00% | 100.00% | 100.00% | 99.49% | [graph](./graphs/cecebeauty.svg) |
+| 🟩 [Kichaka](https://kichaka.top) | up | 133 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kichaka.svg) |
+| 🟩 [KFS](https://hr.kenyaforestservice.org) | up | 422 ms | 100.00% | 100.00% | 99.36% | 95.81% | [graph](./graphs/kfs.svg) |
+| 🟩 [KIMAP](https://kimap.org) | up | 182 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/kimap.svg) |
+| 🟩 [Protouch](https://protouch.co.ke) | up | 179 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/protouch.svg) |
+| 🟩 [KFC](https://kfc.ac.ke) | up | 441 ms | 100.00% | 100.00% | 94.27% | 84.43% | [graph](./graphs/kfc.svg) |
+| 🟩 [CampaignHQ](https://campaignhq.top) | up | 158 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
+| 🟩 [Cece Beauty](https://cecebeauty.co.ke) | up | 25 ms | 100.00% | 100.00% | 100.00% | 99.49% | [graph](./graphs/cecebeauty.svg) |
 
-_Updated 2026-10-19 23:36 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-10-20 02:04 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
