@@ -1,33 +1,24 @@
 id: kfc
 name: KFC
 target: https://kfc.ac.ke
-status: down
-since: 2026-10-23T15:15:29.617Z
-lastUpdated: 2026-10-23T15:15:29.617Z
-consecutiveFailures: 2
+status: up
+since: 2026-10-23T19:20:29.135Z
+lastUpdated: 2026-10-23T19:20:29.135Z
+consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-10-23
-  n: 4
+  n: 5
   down: 2
   deg: 0
-  sum: 20954
+  sum: 21523
   max: 10000
 window:
   d: 2026-10-23T16:45:47.826Z
-  n: 0
+  n: 1
   down: 0
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 10000
-error: Timed out after 10000ms
-incident:
-  id: kfc-1792768529617
-  startedAt: 1792768529617
-  severity: down
-  reason: Timed out after 10000ms
-  issue: 6
-  issueUrl: https://github.com/Manyara20/Upsite/issues/6
-  lastCommentAt: 1792768529617
-  lastCommentReason: Timed out after 10000ms
+  sum: 569
+  max: 569
+responseTime: 569
+code: 200
