@@ -3,22 +3,22 @@ name: Cece Beauty
 target: https://cecebeauty.co.ke
 status: up
 since: 2026-09-15T00:52:46.816Z
-lastUpdated: 2026-10-29T14:33:13.378Z
+lastUpdated: 2026-10-29T19:49:36.986Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-10-29
-  n: 3
+  n: 4
   down: 0
   deg: 0
-  sum: 108
-  max: 41
+  sum: 159
+  max: 51
 window:
   d: 2026-10-29T12:35:54.187Z
-  n: 1
+  n: 2
   down: 0
   deg: 0
-  sum: 27
-  max: 27
-responseTime: 27
+  sum: 78
+  max: 51
+responseTime: 51
 code: 200
