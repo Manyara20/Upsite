@@ -19,7 +19,7 @@ product, git is the database — with a Next.js status site in place of Sapper.
 | 🟩 [CampaignHQ](https://campaignhq.top) | up | 172 ms | 100.00% | 100.00% | 100.00% | 100.00% | [graph](./graphs/campaign-top.svg) |
 | 🟩 [Cece Beauty](https://cecebeauty.co.ke) | up | 43 ms | 100.00% | 100.00% | 100.00% | 99.61% | [graph](./graphs/cecebeauty.svg) |
 
-_Updated 2026-10-31 00:40 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
+_Updated 2026-10-31 06:13 UTC by [the uptime workflow](../../actions/workflows/uptime.yml)._
 <!-- upsite:status:end -->
 
 ---
