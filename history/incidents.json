@@ -6,7 +6,8 @@
     "severity": "down",
     "reason": "Timed out after 10000ms",
     "issue": 7,
-    "issueUrl": "https://github.com/Manyara20/Upsite/issues/7"
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/7",
+    "endedAt": 1793658554010
   },
   {
     "id": "kfc-1792768529617",
