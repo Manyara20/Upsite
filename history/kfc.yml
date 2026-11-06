@@ -1,33 +1,24 @@
 id: kfc
 name: KFC
 target: https://kfc.ac.ke
-status: down
-since: 2026-11-06T08:29:19.728Z
-lastUpdated: 2026-11-06T08:29:19.728Z
-consecutiveFailures: 2
+status: up
+since: 2026-11-06T16:11:33.719Z
+lastUpdated: 2026-11-06T16:11:33.719Z
+consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-11-06
-  n: 2
+  n: 3
   down: 2
   deg: 0
-  sum: 10638
+  sum: 11128
   max: 10000
 window:
   d: 2026-11-06T13:58:34.909Z
-  n: 0
+  n: 1
   down: 0
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 638
-error: "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443"
-incident:
-  id: kfc-1793953759728
-  startedAt: 1793953759728
-  severity: down
-  reason: "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443"
-  issue: 8
-  issueUrl: https://github.com/Manyara20/Upsite/issues/8
-  lastCommentAt: 1793953759728
-  lastCommentReason: "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443"
+  sum: 490
+  max: 490
+responseTime: 490
+code: 200

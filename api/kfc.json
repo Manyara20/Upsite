@@ -11,12 +11,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "down",
-    "since": 1793953759728,
-    "lastCheck": 1793953759728,
-    "lastLatency": 638,
-    "lastError": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443",
-    "consecutiveFailures": 2
+    "status": "up",
+    "since": 1793981493719,
+    "lastCheck": 1793981493719,
+    "lastLatency": 490,
+    "lastCode": 200,
+    "consecutiveFailures": 0
   },
   "recent": [
     {
@@ -1283,6 +1283,12 @@
       "t": 1793973514909,
       "s": "down",
       "ms": 638
+    },
+    {
+      "t": 1793981493719,
+      "s": "up",
+      "ms": 490,
+      "c": 200
     }
   ],
   "daily": [
@@ -1864,21 +1870,21 @@
     },
     {
       "d": "2026-11-06",
-      "n": 2,
+      "n": 3,
       "down": 2,
       "deg": 0,
-      "sum": 10638,
+      "sum": 11128,
       "max": 10000
     }
   ],
   "uptime": {
-    "day": 0,
-    "week": 0.7407407407407407,
-    "month": 0.9155844155844156,
-    "quarter": 0.850356294536817
+    "day": 0.3333333333333333,
+    "week": 0.75,
+    "month": 0.9161290322580645,
+    "quarter": 0.8507109004739336
   },
   "latency": {
-    "avg": 581,
+    "avg": 580,
     "p95": 1462,
     "min": 365,
     "max": 4564
@@ -1891,7 +1897,8 @@
       "severity": "down",
       "reason": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443",
       "issue": 8,
-      "issueUrl": "https://github.com/Manyara20/Upsite/issues/8"
+      "issueUrl": "https://github.com/Manyara20/Upsite/issues/8",
+      "endedAt": 1793981493719
     },
     {
       "id": "kfc-1793550481878",
