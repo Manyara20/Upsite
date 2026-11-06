@@ -3,22 +3,22 @@ name: Simba 2027
 target: https://bitok.campaignhq.top
 status: up
 since: 2026-08-26T09:42:08.880Z
-lastUpdated: 2026-11-06T16:11:32.969Z
-consecutiveFailures: 0
+lastUpdated: 2026-11-06T21:31:09.251Z
+consecutiveFailures: 1
 consecutiveDegraded: 0
 today:
   d: 2026-11-06
-  n: 3
-  down: 0
+  n: 4
+  down: 1
   deg: 0
-  sum: 909
+  sum: 1223
   max: 353
 window:
   d: 2026-11-06T13:58:34.909Z
-  n: 1
-  down: 0
+  n: 2
+  down: 1
   deg: 0
-  sum: 282
-  max: 282
-responseTime: 282
-code: 200
+  sum: 596
+  max: 314
+responseTime: 314
+error: "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top"
