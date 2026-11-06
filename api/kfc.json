@@ -11,12 +11,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "up",
-    "since": 1793658554010,
-    "lastCheck": 1793928886724,
-    "lastLatency": 10000,
-    "lastError": "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)",
-    "consecutiveFailures": 1
+    "status": "down",
+    "since": 1793953759728,
+    "lastCheck": 1793953759728,
+    "lastLatency": 638,
+    "lastError": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443",
+    "consecutiveFailures": 2
   },
   "recent": [
     {
@@ -1278,6 +1278,12 @@
       "t": 1793944261093,
       "s": "down",
       "ms": 10000
+    },
+    {
+      "t": 1793953759728,
+      "s": "down",
+      "ms": 638,
+      "e": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443"
     }
   ],
   "daily": [
@@ -1859,18 +1865,18 @@
     },
     {
       "d": "2026-11-06",
-      "n": 1,
-      "down": 1,
+      "n": 2,
+      "down": 2,
       "deg": 0,
-      "sum": 10000,
+      "sum": 10638,
       "max": 10000
     }
   ],
   "uptime": {
     "day": 0,
-    "week": 0.7692307692307693,
-    "month": 0.9215686274509803,
-    "quarter": 0.8523809523809524
+    "week": 0.7407407407407407,
+    "month": 0.9155844155844156,
+    "quarter": 0.850356294536817
   },
   "latency": {
     "avg": 581,
@@ -1879,6 +1885,15 @@
     "max": 4564
   },
   "incidents": [
+    {
+      "id": "kfc-1793953759728",
+      "monitorId": "kfc",
+      "startedAt": 1793953759728,
+      "severity": "down",
+      "reason": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443",
+      "issue": 8,
+      "issueUrl": "https://github.com/Manyara20/Upsite/issues/8"
+    },
     {
       "id": "kfc-1793550481878",
       "monitorId": "kfc",

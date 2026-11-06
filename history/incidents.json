@@ -1,5 +1,14 @@
 [
   {
+    "id": "kfc-1793953759728",
+    "monitorId": "kfc",
+    "startedAt": 1793953759728,
+    "severity": "down",
+    "reason": "ECONNREFUSED: connect ECONNREFUSED 80.240.200.248:443",
+    "issue": 8,
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/8"
+  },
+  {
     "id": "kfc-1793550481878",
     "monitorId": "kfc",
     "startedAt": 1793550481878,
