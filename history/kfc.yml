@@ -14,11 +14,11 @@ today:
   sum: 10000
   max: 10000
 window:
-  d: 2026-11-05T23:27:44.910Z
-  n: 1
-  down: 1
+  d: 2026-11-06T05:51:01.093Z
+  n: 0
+  down: 0
   deg: 0
-  sum: 10000
-  max: 10000
+  sum: 0
+  max: 0
 responseTime: 10000
 error: "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)"

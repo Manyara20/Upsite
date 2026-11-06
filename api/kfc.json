@@ -1275,10 +1275,9 @@
       "ms": 497
     },
     {
-      "t": 1793928886724,
-      "s": "up",
-      "ms": 10000,
-      "e": "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)"
+      "t": 1793944261093,
+      "s": "down",
+      "ms": 10000
     }
   ],
   "daily": [
@@ -1874,10 +1873,10 @@
     "quarter": 0.8523809523809524
   },
   "latency": {
-    "avg": 625,
-    "p95": 1542,
+    "avg": 581,
+    "p95": 1462,
     "min": 365,
-    "max": 10000
+    "max": 4564
   },
   "incidents": [
     {
