@@ -3,22 +3,22 @@ name: KFC
 target: https://kfc.ac.ke
 status: up
 since: 2026-11-02T22:29:14.010Z
-lastUpdated: 2026-11-05T21:11:35.239Z
-consecutiveFailures: 0
+lastUpdated: 2026-11-06T01:34:46.724Z
+consecutiveFailures: 1
 consecutiveDegraded: 0
 today:
-  d: 2026-11-05
-  n: 3
-  down: 0
+  d: 2026-11-06
+  n: 1
+  down: 1
   deg: 0
-  sum: 1506
-  max: 523
+  sum: 10000
+  max: 10000
 window:
   d: 2026-11-05T23:27:44.910Z
-  n: 0
-  down: 0
+  n: 1
+  down: 1
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 470
-code: 200
+  sum: 10000
+  max: 10000
+responseTime: 10000
+error: "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)"

@@ -13,10 +13,10 @@
   "state": {
     "status": "up",
     "since": 1793658554010,
-    "lastCheck": 1793913095239,
-    "lastLatency": 470,
-    "lastCode": 200,
-    "consecutiveFailures": 0
+    "lastCheck": 1793928886724,
+    "lastLatency": 10000,
+    "lastError": "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)",
+    "consecutiveFailures": 1
   },
   "recent": [
     {
@@ -1273,6 +1273,12 @@
       "t": 1793921264910,
       "s": "up",
       "ms": 497
+    },
+    {
+      "t": 1793928886724,
+      "s": "up",
+      "ms": 10000,
+      "e": "UND_ERR_CONNECT_TIMEOUT: Connect Timeout Error (attempted address: kfc.ac.ke:443, timeout: 10000ms)"
     }
   ],
   "daily": [
@@ -1851,19 +1857,27 @@
       "deg": 0,
       "sum": 1506,
       "max": 523
+    },
+    {
+      "d": "2026-11-06",
+      "n": 1,
+      "down": 1,
+      "deg": 0,
+      "sum": 10000,
+      "max": 10000
     }
   ],
   "uptime": {
-    "day": 1,
-    "week": 0.8275862068965517,
-    "month": 0.9294871794871795,
-    "quarter": 0.8544152744630071
+    "day": 0,
+    "week": 0.7692307692307693,
+    "month": 0.9215686274509803,
+    "quarter": 0.8523809523809524
   },
   "latency": {
-    "avg": 581,
-    "p95": 1462,
+    "avg": 625,
+    "p95": 1542,
     "min": 365,
-    "max": 4564
+    "max": 10000
   },
   "incidents": [
     {
