@@ -14,12 +14,12 @@ today:
   sum: 426
   max: 426
 window:
-  d: 2026-11-07T21:37:43.553Z
-  n: 2
-  down: 2
+  d: 2026-11-08T05:19:58.372Z
+  n: 0
+  down: 0
   deg: 0
-  sum: 933
-  max: 507
+  sum: 0
+  max: 0
 responseTime: 426
 error: "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top"
 incident:
