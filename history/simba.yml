@@ -3,24 +3,24 @@ name: Simba 2027
 target: https://bitok.campaignhq.top
 status: down
 since: 2026-11-07T01:08:24.205Z
-lastUpdated: 2026-11-08T01:32:54.067Z
-consecutiveFailures: 7
+lastUpdated: 2026-11-08T07:55:39.841Z
+consecutiveFailures: 8
 consecutiveDegraded: 0
 today:
   d: 2026-11-08
+  n: 2
+  down: 2
+  deg: 0
+  sum: 1000
+  max: 574
+window:
+  d: 2026-11-08T05:19:58.372Z
   n: 1
   down: 1
   deg: 0
-  sum: 426
-  max: 426
-window:
-  d: 2026-11-08T05:19:58.372Z
-  n: 0
-  down: 0
-  deg: 0
-  sum: 0
-  max: 0
-responseTime: 426
+  sum: 574
+  max: 574
+responseTime: 574
 error: "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top"
 incident:
   id: simba-1794013704205
@@ -29,5 +29,5 @@ incident:
   reason: "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top"
   issue: 9
   issueUrl: https://github.com/Manyara20/Upsite/issues/9
-  lastCommentAt: 1794101574067
+  lastCommentAt: 1794124539841
   lastCommentReason: "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top"
