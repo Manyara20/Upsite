@@ -3,22 +3,22 @@ name: Protouch
 target: https://protouch.co.ke
 status: up
 since: 2026-08-26T09:42:08.859Z
-lastUpdated: 2026-11-09T10:16:09.471Z
+lastUpdated: 2026-11-09T20:50:55.849Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-11-09
-  n: 2
+  n: 3
   down: 0
   deg: 0
-  sum: 386
-  max: 211
+  sum: 673
+  max: 287
 window:
   d: 2026-11-09T15:41:39.071Z
-  n: 0
+  n: 1
   down: 0
   deg: 0
-  sum: 0
-  max: 0
-responseTime: 175
+  sum: 287
+  max: 287
+responseTime: 287
 code: 200
