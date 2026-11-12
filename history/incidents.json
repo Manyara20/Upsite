@@ -6,7 +6,8 @@
     "severity": "down",
     "reason": "ERR_TLS_CERT_ALTNAME_INVALID: Hostname/IP does not match certificate's altnames: Host: bitok.campaignhq.top. is not in the cert's altnames: DNS:campaignhq.top, DNS:www.campaignhq.top",
     "issue": 9,
-    "issueUrl": "https://github.com/Manyara20/Upsite/issues/9"
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/9",
+    "endedAt": 1794444518069
   },
   {
     "id": "kfc-1793953759728",
