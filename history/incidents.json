@@ -6,7 +6,8 @@
     "severity": "down",
     "reason": "Timed out after 10000ms",
     "issue": 11,
-    "issueUrl": "https://github.com/Manyara20/Upsite/issues/11"
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/11",
+    "endedAt": 1795083208645
   },
   {
     "id": "kfs-1795053855943",
@@ -15,7 +16,8 @@
     "severity": "down",
     "reason": "Timed out after 10000ms",
     "issue": 10,
-    "issueUrl": "https://github.com/Manyara20/Upsite/issues/10"
+    "issueUrl": "https://github.com/Manyara20/Upsite/issues/10",
+    "endedAt": 1795083207928
   },
   {
     "id": "simba-1794013704205",
