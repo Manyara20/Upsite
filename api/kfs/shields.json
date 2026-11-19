@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "KFS",
-  "message": "up",
-  "color": "brightgreen"
+  "message": "down",
+  "color": "red"
 }

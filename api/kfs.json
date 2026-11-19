@@ -12,12 +12,12 @@
   "secure": false,
   "intervalSeconds": 300,
   "state": {
-    "status": "up",
-    "since": 1788166043626,
-    "lastCheck": 1795034810060,
-    "lastLatency": 10001,
+    "status": "down",
+    "since": 1795053855943,
+    "lastCheck": 1795053855943,
+    "lastLatency": 10000,
     "lastError": "Timed out after 10000ms",
-    "consecutiveFailures": 1
+    "consecutiveFailures": 2
   },
   "recent": [
     {
@@ -1449,6 +1449,12 @@
       "t": 1795046645559,
       "s": "down",
       "ms": 10001
+    },
+    {
+      "t": 1795053855943,
+      "s": "down",
+      "ms": 10000,
+      "e": "Timed out after 10000ms"
     }
   ],
   "daily": [
@@ -2131,13 +2137,21 @@
       "deg": 0,
       "sum": 10973,
       "max": 10001
+    },
+    {
+      "d": "2026-11-19",
+      "n": 1,
+      "down": 1,
+      "deg": 0,
+      "sum": 10000,
+      "max": 10000
     }
   ],
   "uptime": {
-    "day": 0.6666666666666666,
-    "week": 0.9615384615384616,
-    "month": 0.9926470588235294,
-    "quarter": 0.9680170575692963
+    "day": 0,
+    "week": 0.9130434782608695,
+    "month": 0.9847328244274809,
+    "quarter": 0.9659574468085106
   },
   "latency": {
     "avg": 506,
@@ -2146,6 +2160,15 @@
     "max": 5738
   },
   "incidents": [
+    {
+      "id": "kfs-1795053855943",
+      "monitorId": "kfs",
+      "startedAt": 1795053855943,
+      "severity": "down",
+      "reason": "Timed out after 10000ms",
+      "issue": 10,
+      "issueUrl": "https://github.com/Manyara20/Upsite/issues/10"
+    },
     {
       "id": "kfs-1788013333408",
       "monitorId": "kfs",
