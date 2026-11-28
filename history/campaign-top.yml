@@ -3,22 +3,22 @@ name: CampaignHQ
 target: https://campaignhq.top
 status: up
 since: 2026-08-26T11:17:27.044Z
-lastUpdated: 2026-11-28T03:15:18.004Z
+lastUpdated: 2026-11-28T11:59:24.552Z
 consecutiveFailures: 0
 consecutiveDegraded: 0
 today:
   d: 2026-11-28
+  n: 2
+  down: 0
+  deg: 0
+  sum: 338
+  max: 192
+window:
+  d: 2026-11-28T07:03:25.063Z
   n: 1
   down: 0
   deg: 0
-  sum: 146
-  max: 146
-window:
-  d: 2026-11-28T07:03:25.063Z
-  n: 0
-  down: 0
-  deg: 0
-  sum: 0
-  max: 0
-responseTime: 146
+  sum: 192
+  max: 192
+responseTime: 192
 code: 200
